@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Larissa Oliveira</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://api.fontshare.com/v2/css?f[]=clash-display@200,300,400,500,600,700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+  <style>
+    :root {
+      --bg: #f0ebe0;
+      --ink: #16120c;
+      --accent: oklch(52% 0.16 240);
+      --accent2: oklch(52% 0.14 200);
+      --muted: oklch(48% 0.04 55);
+      --surface: #e6e0d6;
+      --surface2: #ddd7cc;
+      --border: rgba(22,18,12,0.1);
+      --font-d: 'Clash Display', sans-serif;
+      --font-s: 'Instrument Serif', serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-d);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── NAV ── */
+    .nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      padding: 20px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.5s ease, background 0.5s ease;
+    }
+    .nav.visible {
+      opacity: 1; pointer-events: all;
+      background: rgba(240,235,224,0.85);
+      backdrop-filter: blur(12px);
+    }
+    .nav-name { font-size: 0.85rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+    .nav-menu-btn {
+      display: none;
+      align-items: center; justify-content: center;
+      width: 44px; height: 44px; padding: 0;
+      background: none; border: 1px solid var(--border); border-radius: 8px;
+      cursor: pointer; color: var(--ink);
+      flex-shrink: 0;
+    }
+    .nav-menu-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .nav-menu-icon { display: flex; flex-direction: column; gap: 5px; width: 18px; }
+    .nav-menu-icon span { display: block; height: 2px; background: var(--ink); border-radius: 1px; }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); transition: color 0.2s; }
+    .nav-links a:hover { color: var(--ink); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(260px, 0.85fr) minmax(0, 1.2fr);
+      gap: clamp(40px, 6vw, 80px);
+      align-items: center;
+      padding: 100px clamp(32px, 5vw, 64px) 100px;
+      position: relative; overflow: hidden;
+      background: var(--bg);
+    }
+    .hero-welcome {
+      font-family: var(--font-s);
+      font-weight: 400;
+      font-size: clamp(1.4rem, 2.3vw, 2.2rem);
+      line-height: 1.25; letter-spacing: -0.01em;
+      color: var(--ink);
+      opacity: 0; transform: translateY(20px);
+      animation: heroWelcomeIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+    }
+    .hero-welcome em { font-style: normal; color: var(--accent); }
+    .hero-tiles {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      column-gap: 9px;
+      row-gap: clamp(10px, 0.9vw, 16px);
+      width: 100%;
+      max-width: 880px;
+      justify-self: end;
+    }
+    .hero-tile {
+      aspect-ratio: 817 / 947;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      animation: tilePop 0.7s ease forwards;
+      position: relative;
+      user-select: none;
+    }
+    .hero-tile-img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    @media (max-width: 968px) {
+      .hero { grid-template-columns: 1fr; gap: 48px; padding-top: 120px; padding-bottom: 120px; }
+      .hero-tiles { justify-self: stretch; max-width: 100%; order: -1; }
+      .hero-welcome { text-align: center; }
+    }
+    @media (max-width: 520px) {
+      .hero-tiles { grid-template-columns: repeat(3, 1fr); }
+    }
+    .hero-scroll {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+      margin-top: 36px;
+      opacity: 0; animation: fadeIn 1s ease forwards; animation-delay: 1.5s;
+    }
+    @media (max-width: 968px) {
+      .hero-scroll { align-items: center; width: 100%; }
+    }
+    .hero-scroll span { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+    .scroll-line {
+      width: 1px; height: 48px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+    .hero-end-spacer {
+      min-height: clamp(80px, 18vh, 200px);
+      background: var(--bg);
+    }
+
+    .disciplines {
+      display: flex; flex-wrap: wrap; gap: 12px;
+      margin-top: 56px;
+    }
+    .discipline-tag {
+      border: 1.5px solid var(--border); border-radius: 100px;
+      padding: 8px 20px;
+      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500;
+      color: var(--muted);
+      transition: border-color 0.3s, color 0.3s, background 0.3s;
+    }
+    .discipline-tag:hover { border-color: var(--accent); color: var(--accent); background: oklch(96% 0.04 28); }
+
+    /* ── TICKER ── */
+    .ticker { overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 16px 0; }
+    .ticker-track { display: flex; width: max-content; animation: ticker 28s linear infinite; }
+    .ticker-item { font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--muted); white-space: nowrap; padding: 0 40px; }
+    .ticker-dot { color: var(--accent); }
+
+    /* ── SECTION HEADER ── */
+    .section-header { padding: 80px 48px 40px; max-width: 1200px; margin: 0 auto; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: baseline; }
+    .section-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+    .section-count { font-size: 0.7rem; letter-spacing: 0.1em; color: var(--muted); }
+
+    /* ── PROJECTS GRID ── */
+    .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; padding: 0 48px 80px; max-width: 1200px; margin: 0 auto; }
+    .projects-grid--upper { padding-bottom: 0; }
+    .projects-divider {
+      max-width: 1200px;
+      margin: 56px auto 28px;
+      padding: 0 48px;
+      display: flex; align-items: center; gap: 18px;
+    }
+    .projects-divider::before, .projects-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .projects-divider-label {
+      font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--muted);
+    }
+    @media (max-width: 768px) {
+      .projects-divider { padding: 0 24px; margin: 40px auto 20px; }
+    }
+    .project-card {
+      background: var(--surface); cursor: pointer; overflow: hidden;
+      border-radius: 4px;
+      transition: transform 0.35s cubic-bezier(0.34,1,0.64,1), box-shadow 0.35s ease;
+    }
+    .project-card:hover { transform: translateY(-6px); box-shadow: 0 24px 48px rgba(22,18,12,0.12); }
+    .project-card-img {
+      width: 100%; aspect-ratio: 4/3;
+      display: flex; align-items: center; justify-content: center;
+      overflow: hidden; position: relative;
+    }
+    .project-card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+    .project-card:hover .project-card-img img { transform: scale(1.04); }
+    .project-card-logo { width: 100%; height: 100%; object-fit: contain; }
+    .project-card-body { padding: 20px 24px 24px; display: flex; justify-content: space-between; align-items: flex-end; }
+    .project-card-title { font-size: 1rem; font-weight: 600; letter-spacing: 0.04em; }
+    .project-card-tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+    .pill {
+      font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500;
+      padding: 4px 10px; border-radius: 100px;
+      background: var(--surface2); color: var(--muted);
+    }
+    .pill-accent { background: oklch(94% 0.04 240); color: oklch(40% 0.12 240); }
+    .card-reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.16,1,0.3,1);
+    }
+    .card-reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── CREATIVE GRID ── */
+    /* Justified rows: each item's flex-grow = its aspect ratio, so a row shares one height with no cropping */
+    .creative-rows { display: flex; flex-direction: column; gap: 4px; padding: 0 48px 80px; max-width: 1200px; margin: 0 auto; }
+    .creative-row { display: flex; gap: 4px; }
+    .creative-stack { flex-basis: 0; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+    .creative-stack > .creative-row { flex: 1 1 auto; }
+    .creative-item { flex-basis: 0; min-width: 0; position: relative; overflow: hidden; cursor: pointer; border-radius: 4px; }
+    /* height/cover absorbs the few px the 4px gaps add to a stack, so tall neighbours line up exactly */
+    .creative-item img, .creative-item video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .creative-item-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(22,18,12,0.7) 0%, transparent 50%);
+      opacity: 0; transition: opacity 0.3s ease;
+      display: flex; flex-direction: column; justify-content: flex-end; padding: 20px;
+    }
+    .creative-item:hover .creative-item-overlay { opacity: 1; }
+    .creative-item-title { color: #f0ebe0; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+    .creative-item-desc { color: rgba(240,235,224,0.7); font-size: 0.65rem; margin-top: 4px; }
+
+    /* ── ABOUT SECTION ── */
+    .about-section { padding: 80px 48px; max-width: 1200px; margin: 0 auto; border-top: 1px solid var(--border); scroll-margin-top: 88px; }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-top: 48px; }
+    .about-bio { font-family: var(--font-s); font-size: clamp(1.1rem, 2vw, 1.7rem); line-height: 1.5; color: var(--ink); font-weight: 400; }
+    .about-bio em { font-style: italic; color: var(--accent); }
+    .about-bio p + p { margin-top: 1em; }
+    .about-detail-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; }
+    .chip-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .chip {
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 16px; background: var(--surface); border-radius: 8px;
+    }
+    .chip-logo { width: 40px; height: 40px; object-fit: contain; border-radius: 50%; }
+    .chip-title { font-size: 0.82rem; font-weight: 600; }
+    .chip-sub { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+    .chip--multi { align-items: flex-start; }
+    .chip-roles { list-style: none; margin-top: 8px; }
+    .chip-role { position: relative; padding-left: 16px; }
+    .chip-role + .chip-role { margin-top: 8px; }
+    .chip-role::before {
+      content: ''; position: absolute; left: 0; top: 5px;
+      width: 6px; height: 6px; border-radius: 50%; background: var(--muted); opacity: 0.6;
+    }
+    .chip-role:first-child::before { background: var(--accent); opacity: 1; }
+    .chip-role:not(:last-child)::after {
+      content: ''; position: absolute; left: 2.5px; top: 15px; bottom: -6px;
+      width: 1px; background: var(--border);
+    }
+    .chip-role-title { font-size: 0.74rem; font-weight: 500; color: var(--ink); }
+
+    /* ── SPORTS ── */
+    .sports-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin: 20px 0; border-radius: 8px; overflow: hidden; }
+    .sports-grid img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+    .sports-bullets { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+    .sports-bullets li { font-size: 0.78rem; color: var(--muted); list-style: none; padding-left: 14px; position: relative; line-height: 1.5; }
+    .sports-bullets li::before { content: '—'; position: absolute; left: 0; color: var(--accent); }
+
+    /* ── BOOKS ── */
+    .books-scroll { display: flex; gap: 10px; overflow-x: auto; padding: 16px 0; scrollbar-width: none; }
+    .books-scroll::-webkit-scrollbar { display: none; }
+    .books-scroll img { height: 200px; width: auto; border-radius: 4px; flex-shrink: 0; transition: transform 0.3s; }
+    .books-scroll img:hover { transform: scale(1.08) translateY(-4px); }
+
+    /* ── CONTACT ── */
+    .contact-page {
+      min-height: 70vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 140px 32px 80px;
+      max-width: 640px; margin: 0 auto;
+      text-align: center;
+    }
+    .contact-heading {
+      font-family: var(--font-s);
+      font-style: italic; font-weight: 400;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      letter-spacing: -0.005em;
+      color: var(--ink);
+      margin-bottom: 56px;
+    }
+    .contact-list {
+      list-style: none;
+      display: flex; flex-direction: column;
+      gap: 28px;
+      width: 100%; max-width: 460px;
+    }
+    .contact-row {
+      display: flex; flex-direction: column;
+      gap: 8px;
+      text-align: left;
+      border-top: 1px solid var(--border);
+      padding-top: 18px;
+    }
+    .contact-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .contact-value {
+      font-size: 1.05rem;
+      color: var(--ink);
+      transition: color 0.2s;
+      word-break: break-word;
+    }
+    .contact-value:hover { color: var(--accent); }
+
+    /* ── FOOTER ── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 48px;
+      display: flex; justify-content: space-between; align-items: flex-end;
+    }
+    .footer-name { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; }
+    .footer-links { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+    .footer-links a { font-size: 0.75rem; color: var(--muted); transition: color 0.2s; text-align: right; }
+    .footer-links a:hover { color: var(--ink); }
+    .footer-copy { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.1em; margin-top: 12px; text-align: right;}
+
+    /* ── OVERLAY ── */
+    .overlay {
+      position: fixed; inset: 0; z-index: 200;
+      background: var(--bg);
+      transform: translateY(100%);
+      transition: transform 0.55s cubic-bezier(0.16,1,0.3,1);
+      display: flex; flex-direction: column;
+    }
+    .overlay.open { transform: translateY(0); }
+    .overlay-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px; border-bottom: 1px solid var(--border);
+      background: var(--bg); flex-shrink: 0;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .overlay-back {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 500;
+      background: none; border: none; cursor: pointer; color: var(--ink);
+      transition: color 0.2s;
+    }
+    .overlay-back:hover { color: var(--accent); }
+    .overlay-back svg { transition: transform 0.2s; }
+    .overlay-back:hover svg { transform: translateX(-3px); }
+    .overlay-scroll { flex: 1; overflow-y: auto; }
+    .overlay-hero { padding: 72px 48px 48px; border-bottom: 1px solid var(--border); max-width: 900px; margin: 0 auto; }
+    .overlay-title { font-size: clamp(1.8rem, 3.4vw, 2.8rem); font-weight: 500; line-height: 1.1; letter-spacing: -0.01em; }
+    .overlay-meta { display: flex; gap: 40px; margin-top: 24px; }
+    .overlay-meta-item label { font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); display: block; margin-bottom: 4px; }
+    .overlay-meta-item span { font-size: 0.82rem; font-weight: 500; }
+    .proj-section { padding: 64px 48px; border-bottom: 1px solid var(--border); max-width: 900px; margin: 0 auto; }
+    .proj-heading { font-size: 0.65rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; }
+    .proj-body { font-family: var(--font-s); font-size: clamp(1rem, 1.8vw, 1.4rem); line-height: 1.6; color: var(--ink); }
+    .proj-gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 28px; }
+    .proj-gallery img { width: 100%; border-radius: 4px; object-fit: cover; aspect-ratio: 4/3; }
+    .proj-gallery--single img { grid-column: 1 / -1; }
+    .proj-feature-img { width: 100%; border-radius: 8px; margin-top: 28px; overflow: hidden; }
+    .proj-feature-img img { width: 100%; }
+    .site-preview {
+      position: relative;
+      margin-top: 28px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      box-shadow: 0 12px 40px rgba(22,18,12,0.13);
+    }
+    .site-preview-frame {
+      width: 100%;
+      height: clamp(440px, 70vh, 720px);
+      border: none;
+      display: block;
+      background: var(--surface);
+    }
+    .site-preview-link {
+      position: absolute;
+      top: 14px; right: 14px;
+      background: var(--ink); color: var(--bg);
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 9px 18px; border-radius: 100px;
+      text-decoration: none;
+      z-index: 2;
+      box-shadow: 0 4px 14px rgba(22,18,12,0.25);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .site-preview-link:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(22,18,12,0.35);
+    }
+    .proj-side { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; }
+    .proj-side img { width: 100%; border-radius: 8px; }
+    .news-snippet { margin-top: 20px; padding: 16px; background: var(--surface); border-radius: 8px; border-left: 3px solid var(--accent); }
+    .news-source { font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+    .news-headline { font-size: 0.85rem; font-weight: 600; margin: 6px 0; line-height: 1.4; }
+    .news-link { font-size: 0.72rem; color: var(--accent); text-decoration: underline; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 300;
+      background: rgba(22,18,12,0.92);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 48px;
+    }
+    .lightbox.open { opacity: 1; pointer-events: all; }
+    .lightbox img, .lightbox video { max-width: 90vw; max-height: 85vh; border-radius: 4px; object-fit: contain; }
+    .lightbox-close {
+      position: absolute; top: 24px; right: 32px;
+      background: none; border: none; cursor: pointer;
+      font-size: 1.5rem; color: #f0ebe0; opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .lightbox-close:hover { opacity: 1; }
+    .lightbox-caption { position: absolute; bottom: 32px; left: 0; right: 0; text-align: center; color: rgba(240,235,224,0.7); font-size: 0.75rem; letter-spacing: 0.08em; }
+
+    /* ── MY WORK ── */
+    .my-work { padding: 100px clamp(24px, 4vw, 48px); max-width: 1400px; margin: 0 auto; }
+    .my-work-title {
+      font-size: 0.78rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .my-work-buttons {
+      display: flex;
+      gap: clamp(8px, 1vw, 16px);
+      width: 100%;
+    }
+    .my-work-btn {
+      border: none;
+      border-radius: clamp(16px, 1.8vw, 24px);
+      height: clamp(160px, 22vw, 260px);
+      font-family: var(--font-s); font-style: italic; font-weight: 400;
+      font-size: clamp(1.6rem, 3.4vw, 3rem);
+      color: var(--ink);
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: filter 0.25s ease;
+      min-width: 0; overflow: hidden; white-space: nowrap;
+      flex-basis: 0;
+    }
+    .my-work-btn-projects { background: #8cc7e8; flex-grow: 3; }
+    .my-work-btn-creative { background: #3f86bf; flex-grow: 1; }
+    .my-work-buttons--start .my-work-btn-projects { animation: tugProjects 8s ease-in-out forwards; }
+    .my-work-buttons--start .my-work-btn-creative { animation: tugCreative 8s ease-in-out forwards; }
+    .my-work-btn:hover { filter: brightness(1.06); }
+    @media (max-width: 640px) {
+      .my-work-buttons { flex-direction: column; gap: 10px; }
+      .my-work-btn { animation: none; flex-grow: 0; flex-shrink: 0; flex-basis: auto; height: 140px; }
+      .my-work-btn-projects { height: 170px; }
+    }
+
+    /* ── KEYFRAMES ── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @keyframes scrollPulse { 0%, 100% { opacity: 0.4; transform: scaleY(1); } 50% { opacity: 1; transform: scaleY(1.2); } }
+    @keyframes heroWelcomeIn { to { opacity: 1; transform: translateY(0); } }
+    @keyframes tilePop { to { opacity: 1; } }
+    @keyframes tugProjects {
+      0%    { flex-grow: 3; }
+      15%   { flex-grow: 2.4; }
+      25%   { flex-grow: 1.7; }
+      35%   { flex-grow: 2.4; }
+      50%   { flex-grow: 3; }
+      65%   { flex-grow: 2.4; }
+      75%   { flex-grow: 1.7; }
+      85%   { flex-grow: 2.4; }
+      100%  { flex-grow: 2; }
+    }
+    @keyframes tugCreative {
+      0%    { flex-grow: 1; }
+      15%   { flex-grow: 1.6; }
+      25%   { flex-grow: 2.3; }
+      35%   { flex-grow: 1.6; }
+      50%   { flex-grow: 1; }
+      65%   { flex-grow: 1.6; }
+      75%   { flex-grow: 2.3; }
+      85%   { flex-grow: 1.6; }
+      100%  { flex-grow: 2; }
+    }
+
+    @media (max-width: 768px) {
+      .nav { padding: 14px 16px; align-items: center; }
+      .nav-name { max-width: calc(100vw - 120px); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .nav-menu-btn { display: inline-flex; }
+      .nav-links {
+        display: none;
+        position: absolute; top: 100%; left: 0; right: 0;
+        flex-direction: column; align-items: stretch; gap: 0;
+        padding: 8px 0 14px;
+        margin: 0;
+        background: rgba(240,235,224,0.97);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        box-shadow: 0 16px 40px rgba(22,18,12,0.08);
+      }
+      .nav.nav--mobile-menu-open .nav-links { display: flex; }
+      .nav-links a {
+        padding: 14px 20px;
+        border-top: 1px solid var(--border);
+      }
+      .nav-links a:first-of-type { border-top: none; }
+      .nav.nav--inner { flex-wrap: nowrap; align-items: center; padding: 26px 20px 16px; }
+      .nav.nav--inner .nav-links { position: static; display: flex; flex-direction: row; flex-wrap: wrap; justify-content: flex-end; gap: 12px; padding: 0; border: none; box-shadow: none; background: transparent; backdrop-filter: none; width: auto; }
+      .nav.nav--inner .nav-links a { padding: 0; border: none; }
+      .hero { padding: 80px 24px 60px; }
+      .hero-end-spacer { display: none; }
+      .projects-grid { grid-template-columns: 1fr; padding: 0 24px 60px; }
+      /* Mobile: rows would get too short, so fall back to a 2-column masonry with the video full width */
+      .creative-rows { display: block; columns: 2; column-gap: 4px; padding: 0 24px 60px; }
+      .creative-row, .creative-stack { display: contents; }
+      .creative-item { break-inside: avoid; margin-bottom: 4px; }
+      .creative-item--wide { column-span: all; }
+      .about-grid { grid-template-columns: 1fr; gap: 48px; }
+      .about-section, .section-header, .footer { padding-left: 24px; padding-right: 24px; }
+      .my-work { padding-top: 40px; }
+      .sports-grid { grid-template-columns: repeat(2, 1fr); }
+      .proj-side { grid-template-columns: 1fr; }
+      .overlay-hero, .overlay-nav { padding-left: 24px; padding-right: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // ─── Data ──────────────────────────────────────────────────────────────────
+    const PROJECTS = [
+      {
+        id: 'faca-parte', title: 'FAÇA PARTE',
+        tags: ['social impact', 'non-profit'],
+        cardImg: 'imgs/facalogo.png', cardBg: '#ede5d8',
+        logoMode: true,
+        timeline: 'Mar 2022 – Jan 2025', role: 'Co-founder & President',
+        sections: [
+          { type: 'text', heading: 'The Idea', body: "After seeing my grandmother struggle to navigate the digital world, unable to perform simple tasks on her phone that my generation takes for granted, I decided to take action. Week after week, I found myself fixing her technology issues, but I wasn't truly teaching her how to solve them independently. That's when the idea for Faça Parte was born: an organization dedicated to offering technology workshops for older adults, led by teenage volunteers." },
+          { type: 'text-images', heading: 'The Early Stages', body: "I started small, inviting my grandparents and my friends' grandparents to weekend sessions at my house or at school. What began as a few informal gatherings quickly grew. Soon, grandparents of students I didn't even know were expressing interest. It became clear that this wasn't just my grandmother's challenge — it was a widespread generational gap.", images: ['imgs/evento.png', 'imgs/fp.png'] },
+          { type: 'text-images', heading: 'Expansion & Growth', body: "We developed partnerships with external organizations and NGOs to broaden our reach, including Instituto Velho Amigo, a nonprofit dedicated to the well-being of older adults, and Clube Paineiras do Morumby, a country club in São Paulo where we ran workshops for members and the local community.", images: ['imgs/va.png', 'imgs/cpm.png'] },
+          { type: 'text-images', heading: 'Corporate Partnerships', body: "We partnered with companies like SAP for their 'Bring Your Parents to Work' day, hosting a dedicated Faça Parte technology workshop at their São Paulo office and reaching new audiences through corporate social responsibility initiatives.", images: ['imgs/corp.png', 'imgs/sap.png'] },
+          { type: 'side', heading: 'Finalist, SXSW EDU Student Impact Challenge', body: "Selected to pitch at one of the biggest stages for technology and impact innovation in the world. We were the only non-American team selected, making the experience even more special.", image: 'imgs/sxsw.png', news: { source: 'ESTADÃO', headline: 'Brazilian students are among the finalists at the world\'s largest innovation event: SXSW EDU!', link: 'https://www.soseducacao.com.br/post/tem-brasil-no-p%C3%B3dio-estudantes-brasileiros-entre-os-finalistas-no-maior-evento-de-inova%C3%A7%C3%A3o-do-mundo' } },
+          { type: 'text-images', heading: 'Brazilian Internet Congress', body: "Invited to speak at the 'Technologies for Social Transformation' panel. It was a privilege to learn more about the initiatives of the other panelists, who are using technology to drive solutions for a better and more equitable Brazil.", images: ['imgs/mic.png', 'imgs/congresso.png'], imgPositions: ['center', 'right center'] }
+        ]
+      },
+      {
+        id: 'hiro', title: 'HIRO',
+        tags: ['full-stack', 'ui/ux', 'health tech'],
+        cardImg: 'imgs/hiro1.png', cardBg: '#dde5ed',
+        timeline: 'Mar 2026 – Present', role: 'Full-Stack · Product & Customer Discovery',
+        externalUrl: 'https://hiro-health.vercel.app/',
+        sections: [
+          { type: 'text', heading: 'The Problem', body: 'Physicians spend up to 2 hours per day on documentation — time that could go toward their patients. Administrative burden is the #1 driver of burnout in medicine. Hiro gives that time back.' },
+          { type: 'text', heading: 'What We\'re Building', body: 'Hiro uses AI to transcribe medical consultations in real time and automatically generate complete SOAP records — in seconds. Physicians focus entirely on the patient while Hiro handles the paperwork. The product integrates with Memed for digital prescriptions and Google Calendar for scheduling, and runs entirely in the browser with no installation required.' },
+          { type: 'text', heading: 'Interface', body: 'Dashboard and consultation flows designed for clarity under time pressure — a calm visual language that keeps attention on the patient and the work at hand. The SOAP record is generated with one click, reviewed inline, and exported immediately.' },
+          { type: 'site-preview', heading: 'Live Product', url: 'https://hiro-health.vercel.app/' },
+          { type: 'text', heading: 'My Role', body: 'I lead full-stack development and product discovery — conducting interviews with physicians in Brazil, shaping the core workflow, and building the product end-to-end. I also drive the go-to-market strategy targeting Brazilian clinics, where the documentation burden is especially acute.' }
+        ]
+      },
+      {
+        id: 'gait', title: 'GAIT',
+        tags: ['healthtech', 'product design'],
+        cardImg: 'imgs/gait.png', cardBg: '#dfe8e4',
+        timeline: 'Nov 2025 – Present', role: 'Co-founder · Product & GTM',
+        sections: [
+          { type: 'side', heading: 'The Idea', body: "Gait was developed during a one-semester startup incubator at the University of Southern California, where our team won the Audience Choice Award at Demo Day. The idea emerged after discovering research showing strong correlations between changes in gait and early neurocognitive decline.", image: 'imgs/demo2.png', imageRight: true },
+          { type: 'text-images', heading: 'The Technology', body: "Gait uses computer vision and machine learning to analyze walking patterns through standard smartphone or camera video. By leveraging pose estimation and time-series modeling, the system tracks metrics such as stride length, variability, and balance, comparing them against an individual's baseline over time.", images: ['imgs/gait.png'] },
+          { type: 'side', heading: 'The Impact', body: "Our long-term vision is to shift healthcare from reactive intervention to proactive monitoring. By detecting subtle deviations in gait earlier, Gait has the potential to provide families, caregivers, and clinicians with meaningful insights before severe symptoms emerge.", image: 'imgs/demo.png', imageRight: true, link: { label: 'View Figma Pitch Deck ↗', url: 'https://www.figma.com/deck/dCYWnFU9JgcxWfUzlHvR40/gait---script-adapted?node-id=266-1563&t=7HcAUB9RcUdtT7eX-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1' } }
+        ]
+      },
+      {
+        id: 'rumo', title: 'RUMO',
+        tags: ['edtech', 'product'],
+        cardImg: 'imgs/rumo.png', cardBg: '#e8e4df',
+        timeline: 'Sep 2025 – Nov 2025', role: 'Co-founder · Product & GTM',
+        externalUrl: 'https://findrumo.com',
+        sections: [
+          { type: 'text', heading: 'The Idea', body: 'As an international student from Brazil, I experienced firsthand how overwhelming and fragmented the U.S. college application process can be. Through customer discovery calls with students and counselors, I learned exactly where the bottlenecks and pain points are. Meet Rumo — an AI-powered platform that consolidates timelines, essays, and college research into one intuitive space.' },
+          { type: 'feature', heading: 'Personalized Onboarding', body: "Streamlined, adaptive onboarding flow. Intakes students' interests, goals, and academic background.", image: 'imgs/rumo1.png' },
+          { type: 'feature', heading: 'AI-Generated Roadmap', body: 'Leveraging AI to deconstruct complex application cycles into manageable milestones.', image: 'imgs/rumo2.png' },
+          { type: 'feature', heading: 'Smart College Search', body: 'Dynamic college and program discovery engine that helps students identify aligned academic pathways.', image: 'imgs/rumo3.png' },
+          { type: 'feature', heading: 'Essay Prompts', body: 'Pulls real-time essay prompts, word count and other application requirements through web scraping + Gemini API.', image: 'imgs/rumo4.png' }
+        ]
+      },
+      {
+        id: 'northstar', title: 'NORTHSTAR   ROBOTICS',
+        tags: ['UI/UX', 'web dev', 'robotics'],
+        cardImg: 'imgs/northstar.png', cardBg: '#0b1220',
+        externalUrl: 'https://www.northstarrobotics.ai/',
+        timeline: '2026', role: 'Designer & Developer',
+        category: 'web-dev',
+        sections: [
+          { type: 'text', heading: 'Overview', body: "Designed and developed the new website for Northstar Robotics — a robotics company building autonomous systems. The site balances a clean, technical visual language with clear product storytelling, communicating the company's mission and capabilities to investors, partners, and prospective hires." },
+          { type: 'site-preview', heading: 'Live Site', url: 'https://www.northstarrobotics.ai/' }
+        ]
+      },
+      {
+        id: 'brasa', title: 'BRASA  USC',
+        tags: ['UI/UX', 'web dev'],
+        cardImg: 'imgs/brasaweb.png', cardBg: '#e0e4ea',
+        externalUrl: 'https://brasausc.com',
+        timeline: '2025 – Present', role: 'Web Developer · UI/UX',
+        category: 'web-dev',
+        sections: [
+          { type: 'text', heading: 'Overview', body: "Designed and coded BRASA USC's webpage using HTML/CSS/JavaScript, improving accessibility and centralizing communication for 100+ members. The project involved full UI design from scratch, with a focus on clarity, mobile responsiveness, and representing the energy of a vibrant Brazilian student community at USC." },
+          { type: 'site-preview', heading: 'Live Site', url: 'https://brasausc.com/' }
+        ]
+      },
+      {
+        id: 'vanessa-cesconetto', title: 'VANESSA  CESCONETTO',
+        tags: ['UI/UX', 'web dev', 'beauty'],
+        cardImg: 'imgs/vanessa.png', cardBg: '#ece5dd',
+        externalUrl: 'https://vanessacesconetto.com',
+        timeline: '2026', role: 'Designer & Developer',
+        category: 'web-dev',
+        sections: [
+          { type: 'text', heading: 'Overview', body: "Designed and developed esthetician Vanessa Cesconetto's website with a premium, minimal visual language aligned with her brand. The webpage was built to communicate services clearly, create trust through elegant presentation, and make consultation booking straightforward on both desktop and mobile." },
+          { type: 'site-preview', heading: 'Live Site', url: 'https://vanessacesconetto.com/' }
+        ]
+      },
+      {
+        id: 'habit-tracker', title: 'HABIT  TRACKER', hidden: true,
+        tags: ['UI/UX', 'web dev', 'productivity'],
+        cardImg: 'imgs/splits.png', cardBg: '#131418',
+        externalUrl: 'https://larissaoliveira-inner.github.io/splits/',
+        timeline: '2026', role: 'Designer & Developer',
+        category: 'web-dev',
+        sections: [
+          { type: 'text', heading: 'Overview', body: "Designed and built Splits, a personal habit tracker that treats daily routines like training splits. It tracks seven habits — from sleep and workouts to reading and networking — with live streaks, personal records and a daily score, alongside a tagged task list. Trends, a networking log, milestone-based goals and weekly results turn everyday check-ins into a clear picture of long-term consistency." },
+          { type: 'site-preview', heading: 'Live Site', url: 'https://larissaoliveira-inner.github.io/splits/' }
+        ]
+      },
+      {
+        id: 'tommys-cart', title: "TOMMY'S  CART",
+        tags: ['branding', 'UI/UX', 'web dev'],
+        cardImg: 'imgs/tommys-site.png', cardBg: '#E0261B',
+        externalUrl: 'https://tommyscart.com',
+        timeline: '2026', role: 'Brand Designer & Developer',
+        category: 'web-dev',
+        sections: [
+          { type: 'text', heading: 'Overview', body: "Built the brand and website for Tommy's Cart, a marketplace where USC students buy and sell with people on campus. Sellers list an item in a minute, classmates send offers at, above or below the asking price, and the seller picks who gets it — not the first or the highest, whoever they want — then they meet on campus." },
+          {
+            type: 'text-images', heading: 'Brand Identity',
+            body: "A loud, friendly identity built around a hand-drawn smiley that doubles as the \"o\" in the wordmark. Snake fruit red and saffron lead the palette, softened by pastel pink and light blue, with Bricolage Grotesque for headlines and DM Mono for small details. The tagline, \"have a nice haul.\", carries the tone across the site and social.",
+            link: { label: 'View brand book ↗', url: 'imgs/tommys-brandbook.pdf' },
+            images: ['imgs/tommys-colors.jpg', 'imgs/tommys-type.jpg', 'imgs/tommys-logo.jpg', 'imgs/tommys-social.jpg'],
+            imgRatio: '16 / 9'
+          },
+          { type: 'site-preview', heading: 'Live Site', url: 'https://tommyscart.com/' }
+        ]
+      },
+      
+    ].filter(p => !p.hidden); // set `hidden: true` on a project to take it off the site without deleting it
+
+    // Creative assets: paths must match files in imgs/ exactly (e.g. oilpainting.jpg). Serve over http(s) for consistent behavior.
+    // If Safari hides an image Chrome shows: check Web Inspector → Network (404), file format (avoid WebP renamed as .png), and very large PNG decode limits.
+    // Laid out as justified rows: every cell in a row shares one height, widths follow `ratio` (pixel width / height).
+    // A cell can also be { stack: [row, row, ...] } — rows stacked vertically inside one cell (lets a single piece, e.g. Charcoal, span the height of several rows).
+    // When adding/swapping media, update `ratio` to the file's real dimensions or the row will crop or leave gaps.
+    const CREATIVE_ROWS = [
+      [
+        { stack: [
+          [{ title: 'Robotic Turtle', desc: 'Made with 3D printer, lego pieces, servo motors and clay', media: 'imgs/robotturtle.mp4', type: 'video', ratio: 1920 / 1080, wide: true }],
+          [
+            { title: 'Acrylic Painting', desc: '"State of Mind"', media: 'imgs/paint.png', type: 'img', ratio: 1260 / 946 },
+            { title: 'Bird House', desc: 'Made using grafitte pencils, practicing 2 point perspective', media: 'imgs/birdhouse.jpg', type: 'img', ratio: 1170 / 887 }
+          ]
+        ] },
+        { title: 'Charcoal', desc: 'Self-portrait — upside down', media: 'imgs/me.png', type: 'img', ratio: 670 / 950 }
+      ],
+      [
+        { title: 'Oil Painting', desc: 'Black & white painting inspired by the Barra do Sahy 2024 landslides', media: 'imgs/boy.png', type: 'img', ratio: 1496 / 1066 },
+        { stack: [
+          [
+            { title: 'Man', desc: 'Graphite pencil drawing study', media: 'imgs/man.png', type: 'img', ratio: 1308 / 1578 },
+            { title: 'Man (2)', desc: 'Graphite pencil drawing study', media: 'imgs/man1.png', type: 'img', ratio: 1051 / 1303 }
+          ],
+          [
+            { title: 'Oil Painting II', desc: 'Oil painting study', media: 'imgs/oilpainting.jpg', type: 'img', ratio: 970 / 1351 },
+            { title: 'Lego Name', desc: 'Colored pens 3D drawing', media: 'imgs/lego.png', type: 'img', ratio: 1208 / 1128 },
+            { title: 'Grandpa', desc: 'Pencil drawing portrait study', media: 'imgs/grandpa.png', type: 'img', ratio: 1094 / 1538 }
+          ]
+        ] }
+      ]
+    ];
+    const rowRatio = row => row.reduce((sum, cell) => sum + cellRatio(cell), 0);
+    // A stack of rows sharing one width: its height is the sum of each row's height, so ratio = 1 / Σ(1 / rowRatio).
+    const cellRatio = cell => cell.stack ? 1 / cell.stack.reduce((sum, row) => sum + 1 / rowRatio(row), 0) : cell.ratio;
+
+    const EXPERIENCE = [
+      {
+        logo: 'imgs/innerai.jpeg', name: 'Inner AI', period: 'May 2026 – Present',
+        roles: [
+          { role: 'AI Deployment (FDE)', period: 'Aug 2026 – Present · Remote' },
+          { role: 'Product & GTM Summer Intern', period: 'May 2026 – Aug 2026 · São Paulo' }
+        ]
+      },
+      { logo: 'imgs/microsoft.png', name: 'Microsoft', role: 'Startup Scout', period: 'Jan 2026 – May 2026' },
+      { logo: 'imgs/sparks.png', logoStyle: { background: '#a62f2c', padding: 5, boxSizing: 'border-box' }, name: 'Tina Sharkey', role: 'Research Assistant', period: 'Dec 2025 – Present' },
+      { logo: 'imgs/jbs.png', name: 'JBS', role: 'M&A and DCM Summer Intern', period: 'Jun 2025 – Aug 2025' }
+    ];
+
+    const LEADERSHIP = [
+      { logo: 'imgs/sep.png', name: 'Sigma Eta Pi at USC', role: 'Active Member', period: 'Aug 2025 – Present' },
+      { logo: 'imgs/gero.png', name: 'GeroTech SC', role: 'President', period: 'Nov 2024 – Present' },
+      { logo: 'imgs/brasa.png', name: 'BRASA USC', role: 'Marketing Director', period: 'Aug 2025 – Present' },    ];
+
+    const BOOKS = ['imgs/gone.png','imgs/murakami.png', 'imgs/atomic.png','imgs/wisdom.png', 'imgs/littlebook.png','imgs/silent.png','imgs/carrie.png','imgs/thehate.png','imgs/start.png','imgs/mebefore.png','imgs/mindset.png','imgs/middle.jpg', 'imgs/outliers.jpg','imgs/crawdads.png','imgs/daisy.jpg','imgs/np.png','imgs/turt.jpg','imgs/evelyn.jpg', 'imgs/happy.jpg','imgs/fraud.jpg','imgs/malibu.jpg','imgs/onetrue.jpg'];
+
+    const TICKER_ITEMS = ['Technology','Design','Business','Innovation','Impact','USC','São Paulo','LA','Startups','Social Impact','Health Tech','Ed Tech'];
+
+    // ─── Hooks ─────────────────────────────────────────────────────────────────
+    function useReveal(threshold = 0.15, options = {}) {
+      const { rootMargin } = options;
+      const ref = useRef(null);
+      const [visible, setVisible] = useState(false);
+      useEffect(() => {
+        const obsConfig = { threshold };
+        if (rootMargin != null) obsConfig.rootMargin = rootMargin;
+        const obs = new IntersectionObserver(
+          ([e]) => { if (e.isIntersecting) setVisible(true); },
+          obsConfig
+        );
+        if (ref.current) obs.observe(ref.current);
+        return () => obs.disconnect();
+      }, [threshold, rootMargin]);
+      return [ref, visible];
+    }
+
+    // ─── My Work ───────────────────────────────────────────────────────────────
+    function MyWork({ onGoProjects, onGoCreative }) {
+      const [ref, visible] = useReveal(0.35);
+      return (
+        <section className="my-work" ref={ref}>
+          <h2 className="my-work-title">my work</h2>
+          <div className={`my-work-buttons${visible ? ' my-work-buttons--start' : ''}`}>
+            <button className="my-work-btn my-work-btn-projects" onClick={onGoProjects}>projects</button>
+            <button className="my-work-btn my-work-btn-creative" onClick={onGoCreative}>creative</button>
+          </div>
+        </section>
+      );
+    }
+
+    // ─── Hero Tiles ─────────────────────────────────────────────────────────────
+    const HERO_TILES = [
+      { src: 'imgs/tile-sunflower.png', label: 'Sunflower' },
+      { src: 'imgs/tile-city.png',      label: 'City' },
+      { src: 'imgs/tile-swim.png',      label: 'Swimming' },
+      { src: 'imgs/tile-track.png',     label: 'Running' },
+      { src: 'imgs/tile-coffee.png',    label: 'Coffee' },
+      { src: 'imgs/tile-pencil.png',    label: 'Art' },
+      { src: 'imgs/tile-brazil.png',    label: 'Brazil' },
+      { src: 'imgs/tile-code.png',      label: 'Code' },
+      { src: 'imgs/tile-beach.png',     label: 'Beach' },
+      { src: 'imgs/tile-books.png',     label: 'Books' },
+      { src: 'imgs/tile-peace.png',     label: 'USC' },
+      { src: 'imgs/tile-popcorn.png',   label: 'Movies' },
+    ];
+
+    function AnimatedHero() {
+      return (
+        <section className="hero">
+          <div className="hero-intro">
+            <h1 className="hero-welcome"> I was born and raised in São Paulo and am currently based in Los Angeles. As a junior at USC’s Iovine and Young Academy, I get to explore innovation at the intersection of <em>technology, business and design</em>.</h1>
+            <div className="hero-scroll">
+              <span>scroll</span>
+              <div className="scroll-line"></div>
+            </div>
+          </div>
+          <div className="hero-tiles">
+            {HERO_TILES.map((t, i) => (
+              <div
+                key={i}
+                className="hero-tile"
+                style={{ animationDelay: `${0.45 + i * 0.055}s` }}
+              >
+                <img className="hero-tile-img" src={t.src} alt={t.label} />
+              </div>
+            ))}
+          </div>
+        </section>
+      );
+    }
+
+    // ─── Ticker ─────────────────────────────────────────────────────────────────
+    function Ticker() {
+      const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
+      return (
+        <div className="ticker">
+          <div className="ticker-track">
+            {items.map((item, i) => (
+              <span key={i} className="ticker-item">{item}<span className="ticker-dot"> · </span></span>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // ─── Projects ───────────────────────────────────────────────────────────────
+    function ProjectCard({ project, onClick, delay }) {
+      const [ref, visible] = useReveal(0.1);
+      return (
+        <article
+          ref={ref}
+          className={`project-card card-reveal ${visible ? 'visible' : ''}`}
+          style={{ transitionDelay: `${delay}ms` }}
+          onClick={onClick}
+        >
+          <div className="project-card-img" style={{ background: project.cardBg }}>
+            {project.logoMode
+              ? <img src={project.cardImg} alt={project.title} className="project-card-logo" />
+              : <img src={project.cardImg} alt={project.title} />
+            }
+          </div>
+          <div className="project-card-body">
+            <div className="project-card-title">{project.title}</div>
+            <div className="project-card-tags">
+              {project.tags.map(t => <span key={t} className="pill">{t}</span>)}
+            </div>
+          </div>
+        </article>
+      );
+    }
+
+    function ProjectsSection({ onOpen }) {
+      const main = PROJECTS.filter(p => p.category !== 'web-dev');
+      const webDev = PROJECTS.filter(p => p.category === 'web-dev');
+      return (
+        <section>
+          <div className="section-header">
+            <span className="section-label">Selected Work</span>
+            <span className="section-count">{String(PROJECTS.length).padStart(2, '0')} Projects</span>
+          </div>
+          <div className="projects-grid projects-grid--upper">
+            {main.map((p, i) => (
+              <ProjectCard key={p.id} project={p} onClick={() => onOpen(p)} delay={i * 80} />
+            ))}
+          </div>
+          {webDev.length > 0 && (
+            <>
+              <div className="projects-divider">
+                <span className="projects-divider-label">Web development</span>
+              </div>
+              <div className="projects-grid">
+                {webDev.map((p, i) => (
+                  <ProjectCard key={p.id} project={p} onClick={() => onOpen(p)} delay={i * 80} />
+                ))}
+              </div>
+            </>
+          )}
+        </section>
+      );
+    }
+
+    function renderCreativeRow(row, key, onOpen) {
+      return (
+        <div key={key} className="creative-row">
+          {row.map((cell, i) => cell.stack
+            ? (
+              <div key={i} className="creative-stack" style={{ flexGrow: cellRatio(cell) }}>
+                {cell.stack.map((inner, j) => renderCreativeRow(inner, j, onOpen))}
+              </div>
+            )
+            : (
+              <div
+                key={i}
+                className={`creative-item${cell.wide ? ' creative-item--wide' : ''}`}
+                style={{ flexGrow: cell.ratio }}
+                onClick={() => onOpen(cell)}
+              >
+                {cell.type === 'video'
+                  ? <video src={cell.media} autoPlay loop muted playsInline />
+                  : <img src={cell.media} alt={cell.title} />}
+                <div className="creative-item-overlay">
+                  <div className="creative-item-title">{cell.title}</div>
+                  <div className="creative-item-desc">{cell.desc}</div>
+                </div>
+              </div>
+            )
+          )}
+        </div>
+      );
+    }
+
+    // ─── Creative ────────────────────────────────────────────────────────────────
+    function CreativeSection({ onOpen }) {
+      const [ref, visible] = useReveal(0.1);
+      return (
+        <section>
+          <div className="section-header">
+            <span className="section-label">Creative Work</span>
+          </div>
+          <div ref={ref} className={`creative-rows card-reveal ${visible ? 'visible' : ''}`}>
+            {CREATIVE_ROWS.map((row, r) => renderCreativeRow(row, r, onOpen))}
+          </div>
+        </section>
+      );
+    }
+
+    // ─── About ──────────────────────────────────────────────────────────────────
+    function AboutSection() {
+      const [ref, visible] = useReveal(0.1);
+      return (
+        <section id="about-section" className="about-section" ref={ref} style={{ opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(32px)', transition: 'opacity 0.9s ease, transform 0.9s ease' }}>
+          <div className="about-grid" style={{ marginTop: 0 }}>
+            <div style={{ marginTop: 0 }}>
+              <div className="about-detail-label" style={{ marginBottom: 20 }}>Education</div>
+              <div className="about-bio">
+                <p>The <span style={{ color: 'var(--accent)' }}>Iovine and Young Academy</span> is a first-of-its-kind program built on the belief that the biggest problems in the world require people who refuse to work in silos.</p>
+                <p>Founded by Jimmy Iovine & Dr. Dre, the Academy trains a small, highly selective cohort to operate at the intersection of technology, design, business, and the arts — simultaneously, not sequentially.</p>
+                <a href="https://www.youtube.com/watch?v=1C3O4SC7AA8" target="_blank" rel="noopener" style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', marginTop: '20px', fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 500, color: 'var(--accent)', fontFamily: 'var(--font-d)', transition: 'color 0.2s' }}
+                  onMouseEnter={e => e.currentTarget.style.color = 'var(--accent)'}
+                  onMouseLeave={e => e.currentTarget.style.color = 'var(--accent)'}
+                >
+                  Watch to learn more
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.5 9.5L9.5 2.5M9.5 2.5H4.5M9.5 2.5V7.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/> 
+                  </svg>
+                </a>
+
+                <div className="about-detail-label" style={{ fontFamily: 'var(--font-d)', lineHeight: 1.4, marginTop: 48, marginBottom: 16 }}>About me</div>
+                <p>I like learning by doing, and I’m happiest when I’m building or working toward something that challenges me. I’m naturally ambitious and competitive with myself. I try to approach every aspect of my life with curiosity and intention.</p>
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 40 }}>
+              <div>
+                <div className="about-detail-label">Experience <a href="https://docs.google.com/document/d/1OqtY1BjmRVQ5YoIp2_su51cwrpn-C25XSvN81L64VQI/edit?usp=sharing" target="_blank" rel="noopener" style={{ color: 'var(--accent)', marginLeft: 8 }}>↗ resume</a></div>
+                <ul className="chip-list">
+                  {EXPERIENCE.map(e => (
+                    <li key={e.name}>
+                      {e.roles ? (
+                        <div className="chip chip--multi">
+                          <img src={e.logo} className="chip-logo" alt={e.name} />
+                          <div>
+                            <div className="chip-title">{e.name}</div>
+                            <div className="chip-sub">{e.period}</div>
+                            <ul className="chip-roles">
+                              {e.roles.map(r => (
+                                <li key={r.role} className="chip-role">
+                                  <div className="chip-role-title">{r.role}</div>
+                                  <div className="chip-sub">{r.period}</div>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="chip">
+                          <img src={e.logo} className="chip-logo" style={e.logoStyle} alt={e.name} />
+                          <div><div className="chip-title">{e.name}</div><div className="chip-sub">{e.role} · {e.period}</div></div>
+                        </div>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <div className="about-detail-label">Leadership & Involvement</div>
+                <ul className="chip-list">
+                  {LEADERSHIP.map(l => (
+                    <li key={l.name}>
+                      <div className="chip">
+                        <img src={l.logo} className="chip-logo" alt={l.name} />
+                        <div><div className="chip-title">{l.name}</div><div className="chip-sub">{l.role} · {l.period}</div></div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ marginTop: 64 }}>
+            <div className="about-detail-label">Sports background</div>
+            <div className="sports-grid">
+              <img src="imgs/swim.png" alt="Swimming" />
+              <img src="imgs/medal.png" alt="Medal" />
+              <img src="imgs/run.png" alt="Running" />
+              <img src="imgs/half.png" alt="Half marathon" />
+            </div>
+            <ul className="sports-bullets" style={{ marginTop: 16 }}>
+              {['Competitive swimmer for 10+ years', 'Started running after retiring from swimming','Represented the largest sport club in LATAM','Ran 6 half marathons in the past 1.5 years','Multi national and state medalist','Currently training for a sub 2-hour half'].map(b => <li key={b}>{b}</li>)}
+            </ul>
+          </div>
+
+          <div style={{ marginTop: 88, paddingTop: 72, borderTop: '1px solid var(--border)' }}>
+            <div className="about-detail-label">My Book Shelf</div>
+            <div className="books-scroll">
+              {BOOKS.map((b, i) => <img key={i} src={b} alt="" />)}
+            </div>
+          </div>
+        </section>
+      );
+    }
+
+    // ─── Footer ─────────────────────────────────────────────────────────────────
+    function Footer() {
+      return (
+        <footer className="footer">
+          <div>
+            <div className="footer-name">Larissa Oliveira</div>
+            <div style={{ fontSize: '0.72rem', color: 'var(--muted)', marginTop: 8 }}>Building at the intersection of technology, design & business</div>
+          </div>
+          <div className="footer-links">
+            <a href="mailto:abujamra@usc.edu">abujamra@usc.edu</a>
+            <a href="https://linkedin.com/in/larissa-oliveira2005" target="_blank" rel="noopener">linkedin.com/in/larissa-oliveira2005</a>
+            <div className="footer-copy">© 2026 Larissa Oliveira</div>
+          </div>
+        </footer>
+      );
+    }
+
+    // ─── Contact Page ───────────────────────────────────────────────────────────
+    function ContactPage() {
+      return (
+        <section className="contact-page">
+          <h1 className="contact-heading">let's connect</h1>
+          <ul className="contact-list">
+            <li className="contact-row">
+              <span className="contact-label">Email</span>
+              <a className="contact-value" href="mailto:abujamra@usc.edu">abujamra@usc.edu</a>
+            </li>
+            <li className="contact-row">
+              <span className="contact-label">LinkedIn</span>
+              <a className="contact-value" href="https://linkedin.com/in/larissa-oliveira2005" target="_blank" rel="noopener">linkedin.com/in/larissa-oliveira2005</a>
+            </li>
+          </ul>
+        </section>
+      );
+    }
+
+    // ─── Project Overlay ────────────────────────────────────────────────────────
+    function ProjectOverlay({ project, onClose }) {
+      const scrollRef = useRef(null);
+      useEffect(() => {
+        if (project && scrollRef.current) scrollRef.current.scrollTop = 0;
+        document.body.style.overflow = project ? 'hidden' : '';
+        return () => { document.body.style.overflow = ''; };
+      }, [project]);
+
+      useEffect(() => {
+        const onKey = e => { if (e.key === 'Escape') onClose(); };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+      }, [onClose]);
+
+      const renderSection = (sec, i) => {
+        const isAlt = i % 2 === 1;
+        return (
+          <div key={i} className={`proj-section${isAlt ? ' proj-section--alt' : ''}`} style={isAlt ? { background: 'var(--surface)', maxWidth: 'none', padding: '64px 48px' } : {}}>
+            <div style={{ maxWidth: sec.type === 'side' && sec.imageRight ? 'none' : 800, margin: '0 auto' }}>
+              <div className="proj-heading">{sec.heading}</div>
+              {!(sec.type === 'side' && sec.imageRight) && <p className="proj-body">{sec.body}</p>}
+              {!(sec.type === 'side' && sec.imageRight) && sec.link && (
+                <a href={sec.link.url} target="_blank" rel="noopener" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 20, padding: '10px 22px', borderRadius: 100, border: '1.5px solid var(--border)', fontSize: '0.72rem', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-d)', fontWeight: 600, color: 'var(--accent)', textDecoration: 'none', transition: 'border-color 0.2s' }}
+                  onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
+                  onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                >{sec.link.label}</a>
+              )}
+              {sec.type === 'text-images' && sec.images && (
+                <div className={`proj-gallery ${sec.images.length === 1 ? 'proj-gallery--single' : ''}`}>
+                  {sec.images.map((img, j) => <img key={j} src={img} alt="" style={{ objectPosition: sec.imgPositions?.[j] || 'center', aspectRatio: sec.imgRatio }} />)}
+                </div>
+              )}
+              {sec.type === 'feature' && sec.image && (
+                <div className="proj-feature-img"><img src={sec.image} alt="" /></div>
+              )}
+              {sec.type === 'site-preview' && sec.url && (
+                <div className="site-preview">
+                  <iframe className="site-preview-frame" src={sec.url} loading="lazy" title={`${sec.heading || 'Site'} preview`} />
+                  <a className="site-preview-link" href={sec.url} target="_blank" rel="noopener">Visit site ↗</a>
+                </div>
+              )}
+              {sec.type === 'side' && !sec.imageRight && (
+                <div className="proj-side" style={{ marginTop: 28 }}>
+                  {sec.image && <img src={sec.image} alt="" style={{ borderRadius: 8 }} />}
+                  <div>
+                    {sec.news && (
+                      <div className="news-snippet">
+                        <div className="news-source">{sec.news.source}</div>
+                        <div className="news-headline">{sec.news.headline}</div>
+                        <a href={sec.news.link} target="_blank" rel="noopener" className="news-link">Read article ↗</a>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+              {sec.type === 'side' && sec.imageRight && (
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center', marginTop: 16 }}>
+                  <div>
+                    <p className="proj-body">{sec.body}</p>
+                    {sec.link && (
+                      <a href={sec.link.url} target="_blank" rel="noopener" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginTop: 20, padding: '10px 22px', borderRadius: 100, border: '1.5px solid var(--border)', fontSize: '0.72rem', letterSpacing: '0.1em', textTransform: 'uppercase', fontFamily: 'var(--font-d)', fontWeight: 600, color: 'var(--accent)', textDecoration: 'none', transition: 'border-color 0.2s' }}
+                        onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--accent)'}
+                        onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+                      >{sec.link.label}</a>
+                    )}
+                  </div>
+                  <img src={sec.image} alt="" style={{ borderRadius: 8, width: '100%', aspectRatio: '4/3', objectFit: 'cover', objectPosition: 'center' }} />
+                </div>
+              )}
+            </div>
+          </div>
+        );
+      };
+
+      return (
+        <div className={`overlay ${project ? 'open' : ''}`}>
+          <div className="overlay-nav">
+            <button className="overlay-back" onClick={onClose}>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              Back
+            </button>
+            {project?.externalUrl && (
+              <a href={project.externalUrl} target="_blank" rel="noopener" style={{ fontSize: '0.75rem', letterSpacing: '0.08em', color: 'var(--accent)' }}>
+                Visit site ↗
+              </a>
+            )}
+          </div>
+          <div className="overlay-scroll" ref={scrollRef}>
+            {project && (
+              <>
+                <div className="overlay-hero">
+                  <h1 className="overlay-title">{project.title}</h1>
+                  <div className="overlay-meta">
+                    <div className="overlay-meta-item"><label>Timeline</label><span>{project.timeline}</span></div>
+                    <div className="overlay-meta-item"><label>Role</label><span>{project.role}</span></div>
+                  </div>
+                </div>
+                {project.sections.map(renderSection)}
+              </>
+            )}
+            <Footer />
+          </div>
+        </div>
+      );
+    }
+
+    // ─── Lightbox ───────────────────────────────────────────────────────────────
+    function Lightbox({ item, onClose }) {
+      useEffect(() => {
+        const onKey = e => { if (e.key === 'Escape') onClose(); };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+      }, [onClose]);
+
+      return (
+        <div className={`lightbox ${item ? 'open' : ''}`} onClick={onClose}>
+          <button className="lightbox-close" onClick={onClose}>×</button>
+          {item && (
+            item.type === 'video'
+              ? <video src={item.media} autoPlay loop muted playsInline onClick={e => e.stopPropagation()} />
+              : <img src={item.media} alt={item.title} onClick={e => e.stopPropagation()} />
+          )}
+          {item && <div className="lightbox-caption">{item.title} — {item.desc}</div>}
+        </div>
+      );
+    }
+
+    // ─── Nav ────────────────────────────────────────────────────────────────────
+    function Nav({ onSection, onSetPage }) {
+      const [visible, setVisible] = useState(false);
+      const [menuOpen, setMenuOpen] = useState(false);
+      const navRef = useRef(null);
+
+      useEffect(() => {
+        const timer = setTimeout(() => setVisible(true), 1200);
+        return () => clearTimeout(timer);
+      }, []);
+
+      useEffect(() => {
+        const onResize = () => { if (window.innerWidth > 768) setMenuOpen(false); };
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
+      }, []);
+
+      useEffect(() => {
+        if (!menuOpen) return;
+        const onDown = (e) => {
+          if (navRef.current && !navRef.current.contains(e.target)) setMenuOpen(false);
+        };
+        const onKey = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
+        document.addEventListener('mousedown', onDown);
+        document.addEventListener('keydown', onKey);
+        return () => {
+          document.removeEventListener('mousedown', onDown);
+          document.removeEventListener('keydown', onKey);
+        };
+      }, [menuOpen]);
+
+      const closeMenu = () => setMenuOpen(false);
+
+      return (
+        <nav
+          ref={navRef}
+          className={`nav ${visible ? 'visible' : ''}${menuOpen ? ' nav--mobile-menu-open' : ''}`}
+        >
+          <div className="nav-name">Larissa Oliveira</div>
+          <button
+            type="button"
+            className="nav-menu-btn"
+            aria-expanded={menuOpen}
+            aria-controls="nav-menu-panel"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            onClick={() => setMenuOpen(o => !o)}
+          >
+            <span className="nav-menu-icon" aria-hidden="true"><span /><span /><span /></span>
+          </button>
+          <div id="nav-menu-panel" className="nav-links" role="navigation">
+            <a href="#about-section" onClick={closeMenu}>About</a>
+            <a href="#" onClick={e => { e.preventDefault(); closeMenu(); onSetPage && onSetPage('projects'); }}>Projects</a>
+            <a href="#" onClick={e => { e.preventDefault(); closeMenu(); onSetPage && onSetPage('creative'); }}>Creative</a>
+            <a href="#" onClick={e => { e.preventDefault(); closeMenu(); onSetPage && onSetPage('contact'); }}>Contact</a>
+          </div>
+        </nav>
+      );
+    }
+
+    // ─── App ────────────────────────────────────────────────────────────────────
+    function App() {
+      const [activeProject, setActiveProject] = useState(null);
+      const [activeCreative, setActiveCreative] = useState(null);
+      const [page, setPage] = useState('home');
+
+      useEffect(() => { window.scrollTo(0, 0); }, [page]);
+
+      if (page === 'projects') return (
+        <>
+          <nav className="nav visible nav--inner">
+            <button onClick={() => setPage('home')} className="overlay-back" style={{ background: 'none', border: 'none' }}>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              Back
+            </button>
+            <div className="nav-links"><a href="#" onClick={e => { e.preventDefault(); setPage('creative'); }}>Creative work</a></div>
+          </nav>
+          <div style={{ paddingTop: 80 }}><ProjectsSection onOpen={setActiveProject} /></div>
+          <Footer />
+          <ProjectOverlay project={activeProject} onClose={() => setActiveProject(null)} />
+        </>
+      );
+
+      if (page === 'creative') return (
+        <>
+          <nav className="nav visible nav--inner">
+            <button onClick={() => setPage('home')} className="overlay-back" style={{ background: 'none', border: 'none' }}>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              Back
+            </button>
+            <div className="nav-links"><a href="#" onClick={e => { e.preventDefault(); setPage('projects'); }}>Projects</a></div>
+          </nav>
+          <div style={{ paddingTop: 80 }}><CreativeSection onOpen={setActiveCreative} /></div>
+          <Footer />
+          <Lightbox item={activeCreative} onClose={() => setActiveCreative(null)} />
+        </>
+      );
+
+      if (page === 'contact') return (
+        <>
+          <nav className="nav visible nav--inner">
+            <button onClick={() => setPage('home')} className="overlay-back" style={{ background: 'none', border: 'none' }}>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              Back
+            </button>
+          </nav>
+          <ContactPage />
+          <Footer />
+        </>
+      );
+
+      return (
+        <>
+          <Nav onSetPage={setPage} />
+          <AnimatedHero />
+          <div id="about">
+            <div className="hero-end-spacer" aria-hidden="true" />
+          </div>
+          <MyWork onGoProjects={() => setPage('projects')} onGoCreative={() => setPage('creative')} />
+          <AboutSection />
+          <Footer />
+          <ProjectOverlay project={activeProject} onClose={() => setActiveProject(null)} />
+          <Lightbox item={activeCreative} onClose={() => setActiveCreative(null)} />
+        </>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
