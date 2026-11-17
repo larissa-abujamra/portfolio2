@@ -96,7 +96,17 @@ main, .nav, .footer { transition: filter .5s var(--ease); }
 
 /* websites */
 .sites { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(56px, 8vw, 104px); }
-.site { display: block; }
+/* each card takes about two-thirds of the row; name and link sit beside it, sides alternate */
+.site { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: clamp(20px, 3.5vw, 48px); align-items: end; }
+.site:nth-child(even) { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+.site:nth-child(even) .browser { order: 2; }
+.site .caption { flex-direction: column; justify-content: flex-end; gap: 4px; margin: 0; padding-bottom: 4px; }
+.site:nth-child(even) .caption { align-items: flex-end; text-align: right; }
+@media (max-width: 760px) {
+  .site, .site:nth-child(even) { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .site:nth-child(even) .browser { order: 0; }
+  .site .caption, .site:nth-child(even) .caption { flex-direction: row; justify-content: space-between; align-items: baseline; text-align: left; }
+}
 .browser { border-radius: 12px; overflow: hidden; background: var(--egg-white); border: 1px solid var(--line); transition: transform .6s var(--ease); }
 .site:hover .browser { transform: translateY(-6px); }
 .browser { border-radius: clamp(10px, 1.4vw, 16px); }
@@ -106,7 +116,7 @@ main, .nav, .footer { transition: filter .5s var(--ease); }
 /* screenshots were taken at 1440 × 900, so the window keeps that 16:10 shape */
 .view { aspect-ratio: 16 / 10; overflow: hidden; }
 .view img { width: 100%; height: auto; transition: transform var(--scroll-time, 6s) cubic-bezier(.45, 0, .55, 1); }
-.site:hover .view img, .site:focus-visible .view img, .site.is-auto .view img { transform: translateY(var(--scroll-to, 0)); }
+.site.is-previewing .view img, .site:focus-visible .view img { transform: translateY(var(--scroll-to, 0)); }
 .caption span:last-child { transition: color .3s; }
 .site:hover .caption span:last-child { color: var(--orange); }
 
@@ -145,8 +155,8 @@ main, .nav, .footer { transition: filter .5s var(--ease); }
 
 /* outer element follows the pointer (GSAP), inner dot scales in and out (CSS) */
 .cursor-play { position: fixed; left: 0; top: 0; z-index: 60; width: 0; height: 0; pointer-events: none; }
-.cursor-play-dot { position: absolute; left: -42px; top: -42px; width: 84px; height: 84px; display: grid; place-items: center; gap: 2px; align-content: center; border-radius: 50%; background: var(--yolk); color: var(--ink); font: 600 .78rem/1 var(--f-body); transform: scale(0); transition: transform .4s cubic-bezier(.34, 1.56, .64, 1); }
-.cursor-play svg { width: 14px; fill: currentColor; margin-left: 2px; }
+.cursor-play-dot { position: absolute; left: -30px; top: -30px; width: 60px; height: 60px; display: grid; place-items: center; gap: 1px; align-content: center; border-radius: 50%; background: var(--yolk); color: var(--ink); font: 600 .66rem/1 var(--f-body); transform: scale(0); transition: transform .4s cubic-bezier(.34, 1.56, .64, 1); }
+.cursor-play svg { width: 10px; fill: currentColor; margin-left: 2px; }
 .cursor-play.is-on .cursor-play-dot { transform: scale(1); }
 @media (hover: hover) and (pointer: fine) {
   .has-cursor .tile { cursor: none; }

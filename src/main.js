@@ -86,13 +86,24 @@ if (!reduce) {
 const fitScroll = img => {
   const dist = Math.max(0, img.offsetHeight - img.parentElement.offsetHeight);
   img.style.setProperty('--scroll-to', `-${dist}px`);
-  img.style.setProperty('--scroll-time', `${Math.max(2.5, dist / 300).toFixed(1)}s`);
+  img.style.setProperty('--scroll-time', `${Math.max(3, dist / 220).toFixed(1)}s`);
 };
 $$('.view img').forEach(img => { if (img.complete) fitScroll(img); else img.addEventListener('load', () => fitScroll(img)); });
 addEventListener('resize', () => $$('.view img').forEach(fitScroll));
-if (matchMedia('(hover: none)').matches && !reduce) {
-  const auto = new IntersectionObserver(es => es.forEach(e => e.target.classList.toggle('is-auto', e.isIntersecting)), { threshold: 0.6 });
-  $$('.site').forEach(s => auto.observe(s));
+// Start the preview only when the mouse actually moves over a card and the page has been still
+// for a moment, so scrolling past a card with the wheel never sets it off.
+let lastPageScroll = 0;
+addEventListener('scroll', () => { lastPageScroll = performance.now(); }, { passive: true });
+if (matchMedia('(hover: hover) and (pointer: fine)').matches && !reduce) {
+  $$('.site').forEach(site => {
+    let timer;
+    site.addEventListener('pointermove', () => {
+      if (site.classList.contains('is-previewing') || timer) return;
+      if (performance.now() - lastPageScroll < 300) return;
+      timer = setTimeout(() => { timer = null; site.classList.add('is-previewing'); }, 250);
+    });
+    site.addEventListener('pointerleave', () => { clearTimeout(timer); timer = null; site.classList.remove('is-previewing'); });
+  });
 }
 
 /* videos play while on screen */
