@@ -20,12 +20,12 @@ Stack: Vite, GSAP (ScrollTrigger), Lenis, Funnel Display / Funnel Sans via Fonts
 | `src/assets/egg.svg` | Vectorized mascot, split into `egg-body`, `egg-yolk`, `egg-eye`, `egg-smile` for animation |
 | `src/assets/wordmark.svg` | Vectorized "Sunny Side Studios" wordmark (`currentColor`) |
 | `public/media/` | Web-compressed videos and posters |
-| `public/work/` | Website screenshots (full page, hero, mobile) |
+| `public/work/` | Full-page website screenshots (taken at 1440 × 900) |
 | `archive/` | Content and images from the previous personal portfolio (portfolio26); not deployed |
 
 ## Adding work
 
-- **Video**: put the file in `public/media/` and copy a `<figure class="video">` block in `index.html`.
+- **Video**: put the file and a poster in `public/media/` and copy a `<figure class="tile">` block in `index.html`. Clicking a tile opens it full size with sound.
 - **Website**: add a full-page screenshot to `public/work/` and copy an `<a class="site">` block. The preview scrolls the whole image on hover.
 
 ## Publishing to larissa-oliveira.com/sunnyside
