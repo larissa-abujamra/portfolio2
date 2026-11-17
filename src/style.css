@@ -110,13 +110,13 @@ main, .nav, .footer { transition: filter .5s var(--ease); }
 .site:hover .caption span:last-child { color: var(--orange); }
 
 /* contact */
-.contact { position: relative; overflow: hidden; max-width: var(--max); margin: 0 auto; padding: clamp(120px, 18vw, 220px) var(--gutter) clamp(180px, 22vw, 260px); text-align: center; }
+.contact { max-width: var(--max); margin: 0 auto; padding: clamp(120px, 18vw, 220px) var(--gutter) clamp(64px, 8vw, 96px); text-align: center; }
 .contact-title { margin: 0; font: 600 clamp(2.2rem, 6vw, 4.6rem)/1 var(--f-display); letter-spacing: -0.04em; }
 .contact-row { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 28px; flex-wrap: wrap; }
 .mail { font-size: clamp(1.05rem, 2vw, 1.3rem); color: var(--orange); border-bottom: 1px solid currentColor; }
 .copy { border: 1px solid var(--line); background: none; border-radius: 999px; padding: 7px 14px; font: 400 .85rem/1 var(--f-body); color: var(--muted); cursor: pointer; transition: color .2s, border-color .2s; }
 .copy:hover { color: var(--ink); border-color: var(--ink); }
-.peek { position: absolute; left: 50%; bottom: -60px; width: clamp(150px, 20vw, 220px); transform: translateX(-50%); }
+.peek { width: clamp(140px, 16vw, 190px); margin: clamp(56px, 8vw, 88px) auto 0; }
 .peek svg { width: 100%; height: auto; }
 
 /* footer */

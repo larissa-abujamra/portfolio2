@@ -83,7 +83,7 @@ if (!reduce) {
     gsap.from(el, { y: 40, opacity: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } });
   });
   // the egg in the footer pops up as you reach it
-  gsap.from('[data-slot="egg-peek"] svg', { yPercent: 70, ease: 'none', scrollTrigger: { trigger: '.contact', start: 'top 60%', end: 'bottom bottom', scrub: true } });
+  gsap.from('[data-slot="egg-peek"] svg', { y: 40, opacity: 0, rotate: -8, duration: 1, ease: 'back.out(2)', scrollTrigger: { trigger: '.peek', start: 'top 95%', once: true } });
 }
 
 /* browser windows scroll through the page on hover */
