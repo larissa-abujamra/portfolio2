@@ -32,19 +32,15 @@ $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
   const target = id === '#top' ? 0 : $(id);
   if (target === null) return;
   e.preventDefault();
-  if (lenis) lenis.scrollTo(target, { duration: 1.4 });
+  if (lenis) lenis.scrollTo(target, { duration: 1.4, offset: target === 0 ? 0 : -$('[data-nav]').offsetHeight });
   else if (target === 0) window.scrollTo(0, 0); else target.scrollIntoView();
 }));
 
-/* nav hides on the way down */
+/* fixed banner: show its bottom line once the page has scrolled */
 const nav = $('[data-nav]');
-let lastY = 0;
-addEventListener('scroll', () => {
-  const y = window.scrollY;
-  if (y > 200 && y > lastY + 4) nav.classList.add('is-hidden');
-  else if (y < lastY - 4 || y < 200) nav.classList.remove('is-hidden');
-  lastY = y;
-}, { passive: true });
+const markNav = () => nav.classList.toggle('is-scrolled', window.scrollY > 8);
+addEventListener('scroll', markNav, { passive: true });
+markNav();
 
 /* the egg */
 const stage = $('[data-egg]');
