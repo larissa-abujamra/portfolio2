@@ -28,55 +28,54 @@
 
     <section class="block" id="videos">
       <h2 class="label" data-reveal>Videos</h2>
-      <div class="videos">
-        <figure class="video" data-reveal>
-          <div class="frame frame--wide">
-            <video data-video src="/media/brasa-usc.mp4" poster="/media/brasa-usc-poster.jpg" muted loop playsinline preload="metadata" aria-label="BRASA USC launch video"></video>
-          </div>
-          <figcaption><span>BRASA USC</span><span>Launch film</span></figcaption>
-        </figure>
-        <figure class="video video--tall" data-reveal>
-          <div class="frame frame--tall" data-sound-toggle>
+      <div class="mosaic" data-reveal>
+          <figure class="tile t-feature" data-sound-toggle>
+            <video data-video src="/media/northstar.mp4" poster="/media/northstar-poster.jpg" muted loop playsinline preload="metadata" aria-label="Northstar Robotics launch video"></video>
+            <figcaption><span>Northstar Robotics</span><span>Launch film</span></figcaption>
+            <button class="sound" type="button" aria-pressed="false" aria-label="Sound"></button>
+          </figure>
+        <div class="mosaic-row">
+          <figure class="tile t-tall" data-sound-toggle>
             <video data-video src="/media/tommys-cart-launch.mp4" poster="/media/tommys-cart-launch-poster.jpg" muted loop playsinline preload="metadata" aria-label="Tommy's Cart launch video"></video>
+            <figcaption><span>Tommy's Cart</span><span>Launch film</span></figcaption>
             <button class="sound" type="button" aria-pressed="false" aria-label="Sound"></button>
-          </div>
-          <figcaption><span>Tommy's Cart</span><span>Launch film</span></figcaption>
-        </figure>
-      </div>
-      <div class="videos videos--flip">
-        <figure class="video video--tall" data-reveal>
-          <div class="frame frame--tall" data-sound-toggle>
-            <video data-video src="/media/dapco.mp4" poster="/media/dapco-poster.jpg" muted loop playsinline preload="metadata" aria-label="DAPCO promo video"></video>
-            <button class="sound" type="button" aria-pressed="false" aria-label="Sound"></button>
-          </div>
-          <figcaption><span>DAPCO</span><span>Promo</span></figcaption>
-        </figure>
-        <figure class="video" data-reveal>
-          <div class="frame frame--wide" data-sound-toggle>
+          </figure>
+          <div class="mosaic-stack">
+          <figure class="tile t-wide">
+            <video data-video src="/media/brasa-usc.mp4" poster="/media/brasa-usc-poster.jpg" muted loop playsinline preload="metadata" aria-label="BRASA USC launch video"></video>
+            <figcaption><span>BRASA USC</span><span>Launch film</span></figcaption>
+          </figure>
+          <figure class="tile t-wide" data-sound-toggle>
             <video data-video src="/media/brand-gpa.mp4" poster="/media/brand-gpa-poster.jpg" muted loop playsinline preload="metadata" aria-label="The Brand GPA book trailer"></video>
+            <figcaption><span>The Brand GPA</span><span>Book trailer</span></figcaption>
             <button class="sound" type="button" aria-pressed="false" aria-label="Sound"></button>
+          </figure>
           </div>
-          <figcaption><span>The Brand GPA</span><span>Book trailer</span></figcaption>
-        </figure>
+          <figure class="tile t-tall" data-sound-toggle>
+            <video data-video src="/media/dapco.mp4" poster="/media/dapco-poster.jpg" muted loop playsinline preload="metadata" aria-label="DAPCO promo video"></video>
+            <figcaption><span>DAPCO</span><span>Promo</span></figcaption>
+            <button class="sound" type="button" aria-pressed="false" aria-label="Sound"></button>
+          </figure>
+        </div>
       </div>
     </section>
 
     <section class="block" id="sites">
       <h2 class="label" data-reveal>Websites</h2>
       <div class="sites">
-        <a class="site" href="https://vanessacesconetto.com" target="_blank" rel="noopener" data-reveal>
-          <div class="browser">
-            <div class="bar"><i></i><i></i><i></i></div>
-            <div class="view"><img src="/work/vanessa-full.webp" alt="vanessacesconetto.com" loading="lazy" /></div>
-          </div>
-          <div class="caption"><span>Vanessa Cesconetto</span><span>vanessacesconetto.com ↗</span></div>
-        </a>
         <a class="site" href="https://brasausc.com" target="_blank" rel="noopener" data-reveal>
           <div class="browser">
             <div class="bar"><i></i><i></i><i></i></div>
             <div class="view"><img src="/work/brasa-full.webp" alt="brasausc.com" loading="lazy" /></div>
           </div>
           <div class="caption"><span>BRASA USC</span><span>brasausc.com ↗</span></div>
+        </a>
+        <a class="site" href="https://vanessacesconetto.com" target="_blank" rel="noopener" data-reveal>
+          <div class="browser">
+            <div class="bar"><i></i><i></i><i></i></div>
+            <div class="view"><img src="/work/vanessa-full.webp" alt="vanessacesconetto.com" loading="lazy" /></div>
+          </div>
+          <div class="caption"><span>Vanessa Cesconetto</span><span>vanessacesconetto.com ↗</span></div>
         </a>
         <a class="site" href="https://larissa-oliveira.com" target="_blank" rel="noopener" data-reveal>
           <div class="browser">
