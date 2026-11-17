@@ -168,6 +168,36 @@ const closeLightbox = () => {
   gsap.to(lbVideo, { ...flipFrom(tile), duration: 0.5, ease: 'expo.inOut', onComplete: done });
 };
 
+/* click hint: play badges, a ripple when the mosaic appears, and a "Play" cursor on desktop */
+const playIcon = '<svg viewBox="0 0 12 14" aria-hidden="true"><path d="M0 0v14l12-7z" /></svg>';
+$$('[data-tile]').forEach((tile, i) => {
+  tile.style.setProperty('--i', i);
+  tile.insertAdjacentHTML('beforeend', `<span class="play-badge" aria-hidden="true">${playIcon}</span>`);
+});
+const mosaic = $('.mosaic');
+new IntersectionObserver((entries, obs) => {
+  if (!entries[0].isIntersecting) return;
+  mosaic.classList.add('is-hinting');
+  obs.disconnect();
+}, { threshold: 0.4 }).observe(mosaic);
+
+if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+  document.documentElement.classList.add('has-cursor');
+  const bubble = document.createElement('div');
+  bubble.className = 'cursor-play';
+  bubble.setAttribute('aria-hidden', 'true');
+  bubble.innerHTML = `<div class="cursor-play-dot">${playIcon}<span>Play</span></div>`;
+  document.body.appendChild(bubble);
+  const bx = gsap.quickTo(bubble, 'x', { duration: reduce ? 0 : 0.35, ease: 'power3.out' });
+  const by = gsap.quickTo(bubble, 'y', { duration: reduce ? 0 : 0.35, ease: 'power3.out' });
+  addEventListener('pointermove', e => { bx(e.clientX); by(e.clientY); });
+  $$('[data-tile]').forEach(tile => {
+    tile.addEventListener('pointerenter', e => { gsap.set(bubble, { x: e.clientX, y: e.clientY }); bubble.classList.add('is-on'); });
+    tile.addEventListener('pointerleave', () => bubble.classList.remove('is-on'));
+    tile.addEventListener('click', () => bubble.classList.remove('is-on'));
+  });
+}
+
 $$('[data-tile]').forEach(tile => {
   tile.addEventListener('click', () => openLightbox(tile));
   tile.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(tile); } });
