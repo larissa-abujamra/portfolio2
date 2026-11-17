@@ -95,7 +95,12 @@ main, .nav, .footer { transition: filter .5s var(--ease); }
 .lightbox-close svg { width: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
 
 /* websites */
-.sites { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(56px, 8vw, 104px); }
+.sites { display: grid; grid-template-columns: minmax(0, 1fr); }
+/* thin hairline between rows, with equal space above and below it */
+.site { padding-block: clamp(28px, 4vw, 52px); }
+.site:first-child { padding-top: 0; }
+.site:last-child { padding-bottom: 0; }
+.site + .site { border-top: 1px solid rgba(47, 29, 18, .08); }
 /* each card takes about two-thirds of the row; name and link sit beside it, sides alternate */
 .site { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: clamp(20px, 3.5vw, 48px); align-items: end; }
 .site:nth-child(even) { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
