@@ -34,7 +34,7 @@ a { color: inherit; text-decoration: none; }
 .nav-word { display: block; height: clamp(44px, 5vw, 56px); color: var(--orange); }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .nav-word svg { height: 100%; width: auto; }
-.nav-link { font-size: .95rem; position: relative; }
+.nav-link { font-size: .95rem; position: relative; color: var(--orange); }
 .nav-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .4s var(--ease); }
 .nav-link:hover::after { transform: scaleX(1); transform-origin: left; }
 
@@ -112,7 +112,7 @@ main, .nav, .footer { transition: filter .5s var(--ease); }
 
 /* contact */
 .contact { max-width: var(--max); margin: 0 auto; padding: clamp(120px, 18vw, 220px) var(--gutter) clamp(64px, 8vw, 96px); text-align: center; }
-.contact-title { margin: 0; font: 600 clamp(2.2rem, 6vw, 4.6rem)/1 var(--f-display); letter-spacing: -0.04em; }
+.contact-title { margin: 0; color: var(--orange); font: 600 clamp(2.2rem, 6vw, 4.6rem)/1 var(--f-display); letter-spacing: -0.04em; }
 .contact-row { display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 28px; flex-wrap: wrap; }
 .mail { font-size: clamp(1.05rem, 2vw, 1.3rem); color: var(--orange); border-bottom: 1px solid currentColor; }
 .copy { border: 1px solid var(--line); background: none; border-radius: 999px; padding: 7px 14px; font: 400 .85rem/1 var(--f-body); color: var(--muted); cursor: pointer; transition: color .2s, border-color .2s; }
