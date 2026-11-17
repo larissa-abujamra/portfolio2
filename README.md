@@ -27,3 +27,13 @@ Stack: Vite, GSAP (ScrollTrigger), Lenis, Funnel Display / Funnel Sans via Fonts
 
 - **Video**: put the file in `public/media/` and copy a `<figure class="video">` block in `index.html`.
 - **Website**: add a full-page screenshot to `public/work/` and copy an `<a class="site">` block. The preview scrolls the whole image on hover.
+
+## Publishing to larissa-oliveira.com/sunnyside
+
+The live page is a built copy inside the `sunnyside/` folder of [larissa-abujamra/portfolio26](https://github.com/larissa-abujamra/portfolio26), which GitHub Pages serves at larissa-oliveira.com.
+
+```bash
+npm run build:sunnyside          # builds into dist-sunnyside/ with paths under /sunnyside/
+rm -rf ../portfolio26/sunnyside && cp -r dist-sunnyside ../portfolio26/sunnyside
+cd ../portfolio26 && git add sunnyside && git commit -m "Update Sunny Side page" && git push
+```
