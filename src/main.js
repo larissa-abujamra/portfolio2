@@ -19,10 +19,6 @@ $$('[data-slot="egg"], [data-slot="egg-peek"]').forEach(el => { el.innerHTML = e
 $$('[data-slot="wordmark"]').forEach(el => { el.innerHTML = wordmarkSvg; });
 $$('[data-slot="egg-peek"] svg, [data-slot="wordmark"] svg').forEach(svg => { svg.setAttribute('aria-hidden', 'true'); svg.removeAttribute('role'); });
 
-/* split hero title into words */
-const title = $('[data-split]');
-title.innerHTML = title.textContent.split(' ').map(w => `<span class="w"><span>${w}</span></span>`).join(' ');
-
 /* smooth scroll */
 let lenis = null;
 if (!reduce) {
@@ -61,8 +57,7 @@ if (!reduce) {
     .to(body, { scaleY: 0.86, scaleX: 1.08, duration: 0.12 }, 0.6)
     .to(body, { scaleY: 1, scaleX: 1, duration: 0.9, ease: 'elastic.out(1.1, 0.35)' }, 0.72)
     .from(yolk, { y: -60, duration: 1, ease: 'elastic.out(1, 0.4)' }, 0.62)
-    .from('.hero-title .w > span', { yPercent: 110, duration: 0.8, stagger: 0.06 }, 0.8)
-    .from(nav, { opacity: 0, duration: 0.8 }, 1.1);
+    .from(nav, { opacity: 0, duration: 0.8 }, 1.0);
 
   gsap.to(body, { scaleY: 1.025, duration: 2.2, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2 });
 
@@ -110,11 +105,22 @@ const io = new IntersectionObserver(es => es.forEach(e => {
 }), { threshold: 0.35 });
 if (!reduce) $$('[data-video]').forEach(v => io.observe(v));
 
-const soundBtn = $('[data-sound]'), soundVideo = $('[data-has-sound]');
-$('[data-sound-toggle]').addEventListener('click', () => {
-  soundVideo.muted = !soundVideo.muted;
-  soundBtn.setAttribute('aria-pressed', String(!soundVideo.muted));
-  soundVideo.play().catch(() => {});
+/* sound: one video at a time, tap the frame to toggle */
+const soundIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" /><path class="wave" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" /><path class="mute" d="M16 9l6 6M22 9l-6 6" /></svg>';
+const soundFrames = $$('[data-sound-toggle]');
+const setSound = (frame, on) => {
+  const v = $('video', frame);
+  v.muted = !on;
+  $('.sound', frame).setAttribute('aria-pressed', String(on));
+  if (on) v.play().catch(() => {});
+};
+soundFrames.forEach(frame => {
+  $('.sound', frame).innerHTML = soundIcon;
+  frame.addEventListener('click', () => {
+    const turnOn = $('video', frame).muted;
+    soundFrames.forEach(f => setSound(f, false));
+    setSound(frame, turnOn);
+  });
 });
 
 /* copy email */

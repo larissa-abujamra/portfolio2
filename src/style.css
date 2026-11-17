@@ -30,7 +30,8 @@ a { color: inherit; text-decoration: none; }
 /* nav */
 .nav { position: fixed; z-index: 50; inset: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 18px var(--gutter); transition: transform .5s var(--ease); }
 .nav.is-hidden { transform: translateY(-100%); }
-.nav-word { display: block; height: 38px; color: var(--orange); }
+.nav-word { display: block; height: clamp(44px, 5vw, 56px); color: var(--orange); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .nav-word svg { height: 100%; width: auto; }
 .nav-link { font-size: .95rem; position: relative; }
 .nav-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: -3px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .4s var(--ease); }
@@ -38,11 +39,8 @@ a { color: inherit; text-decoration: none; }
 
 /* hero */
 .hero { min-height: 100svh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: clamp(16px, 3vh, 32px); padding: 100px var(--gutter) 60px; text-align: center; }
-.egg-stage { width: min(56vw, 400px); padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.egg-stage { width: min(64vw, 460px); padding: 0; border: 0; background: none; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .egg-stage svg { width: 100%; height: auto; overflow: visible; }
-.hero-title { margin: 0; font: 600 clamp(1.6rem, 3.4vw, 2.6rem)/1.1 var(--f-display); letter-spacing: -0.03em; }
-.hero-title .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .1em; margin-bottom: -.1em; }
-.hero-title .w > span { display: inline-block; }
 
 /* egg parts */
 .egg .egg-body, .egg .egg-yolk, .egg .egg-eye, .egg .egg-smile { transform-box: fill-box; }
@@ -60,6 +58,9 @@ figcaption span:last-child, .caption span:last-child { color: var(--muted); }
 
 /* videos */
 .videos { display: grid; grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr); gap: clamp(16px, 2.5vw, 32px); align-items: end; }
+.videos + .videos { margin-top: clamp(40px, 6vw, 72px); }
+.videos--flip { grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr); }
+.frame[data-sound-toggle] { cursor: pointer; }
 .video { margin: 0; }
 .frame { position: relative; overflow: hidden; border-radius: 14px; background: var(--ink); }
 .frame video { width: 100%; height: 100%; object-fit: cover; }
@@ -70,22 +71,23 @@ figcaption span:last-child, .caption span:last-child { color: var(--muted); }
 .sound svg path:first-child { fill: currentColor; }
 .sound .wave, .sound[aria-pressed="true"] .mute { display: none; }
 .sound[aria-pressed="true"] .wave { display: inline; }
-@media (max-width: 760px) { .videos { grid-template-columns: 1fr; } .video--tall { width: min(100%, 320px); justify-self: center; } }
+@media (max-width: 760px) { .videos, .videos--flip { grid-template-columns: 1fr; } .video--tall { width: min(100%, 320px); justify-self: center; } }
 
 /* websites */
-.sites { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(16px, 2.5vw, 32px); }
+.sites { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(56px, 8vw, 104px); }
 .site { display: block; }
 .browser { border-radius: 12px; overflow: hidden; background: var(--egg-white); border: 1px solid var(--line); transition: transform .6s var(--ease); }
 .site:hover .browser { transform: translateY(-6px); }
-.bar { display: flex; gap: 6px; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+.browser { border-radius: clamp(10px, 1.4vw, 16px); }
+.bar { display: flex; gap: 7px; padding: clamp(10px, 1.2vw, 14px) clamp(12px, 1.4vw, 18px); border-bottom: 1px solid var(--line); }
 .bar i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); transition: background .3s; }
 .site:hover .bar i { background: var(--yolk); }
-.view { aspect-ratio: 4 / 5; overflow: hidden; }
+/* screenshots were taken at 1440 × 900, so the window keeps that 16:10 shape */
+.view { aspect-ratio: 16 / 10; overflow: hidden; }
 .view img { width: 100%; height: auto; transition: transform var(--scroll-time, 6s) cubic-bezier(.45, 0, .55, 1); }
 .site:hover .view img, .site:focus-visible .view img, .site.is-auto .view img { transform: translateY(var(--scroll-to, 0)); }
 .caption span:last-child { transition: color .3s; }
 .site:hover .caption span:last-child { color: var(--orange); }
-@media (max-width: 860px) { .sites { grid-template-columns: 1fr; } .view { aspect-ratio: 4 / 3; } }
 
 /* contact */
 .contact { position: relative; overflow: hidden; max-width: var(--max); margin: 0 auto; padding: clamp(120px, 18vw, 220px) var(--gutter) clamp(180px, 22vw, 260px); text-align: center; }
