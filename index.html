@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sunny Side Studios</title>
+  <meta name="description" content="Websites and short videos by Larissa Oliveira." />
+  <meta name="theme-color" content="#f6f2e4" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta property="og:title" content="Sunny Side Studios" />
+  <meta property="og:description" content="Websites and short videos." />
+</head>
+<body>
+  <header class="nav" data-nav>
+    <a class="nav-brand" href="#top" aria-label="Sunny Side Studios">
+      <span class="nav-word" data-slot="wordmark"></span>
+    </a>
+    <a class="nav-link" href="#contact">Contact</a>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <button class="egg-stage" type="button" data-egg aria-label="Sunny, the egg">
+        <span data-slot="egg"></span>
+      </button>
+      <h1 class="hero-title" data-split>Websites &amp; short videos.</h1>
+    </section>
+
+    <section class="block" id="videos">
+      <h2 class="label" data-reveal>Videos</h2>
+      <div class="videos">
+        <figure class="video" data-reveal>
+          <div class="frame frame--wide">
+            <video data-video src="/media/brasa-usc.mp4" poster="/media/brasa-usc-poster.jpg" muted loop playsinline preload="metadata" aria-label="BRASA USC launch video"></video>
+          </div>
+          <figcaption><span>BRASA USC</span><span>Launch film</span></figcaption>
+        </figure>
+        <figure class="video video--tall" data-reveal>
+          <div class="frame frame--tall" data-sound-toggle>
+            <video data-video data-has-sound src="/media/tommys-cart-launch.mp4" poster="/media/tommys-cart-launch-poster.jpg" muted loop playsinline preload="metadata" aria-label="Tommy's Cart launch video"></video>
+            <button class="sound" type="button" data-sound aria-pressed="false" aria-label="Sound">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" /><path class="wave" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" /><path class="mute" d="M16 9l6 6M22 9l-6 6" /></svg>
+            </button>
+          </div>
+          <figcaption><span>Tommy's Cart</span><span>Launch film</span></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="block" id="sites">
+      <h2 class="label" data-reveal>Websites</h2>
+      <div class="sites">
+        <a class="site" href="https://vanessacesconetto.com" target="_blank" rel="noopener" data-reveal>
+          <div class="browser">
+            <div class="bar"><i></i><i></i><i></i></div>
+            <div class="view"><img src="/work/vanessa-full.webp" alt="vanessacesconetto.com" loading="lazy" /></div>
+          </div>
+          <div class="caption"><span>Vanessa Cesconetto</span><span>Visit ↗</span></div>
+        </a>
+        <a class="site" href="https://brasausc.com" target="_blank" rel="noopener" data-reveal>
+          <div class="browser">
+            <div class="bar"><i></i><i></i><i></i></div>
+            <div class="view"><img src="/work/brasa-full.webp" alt="brasausc.com" loading="lazy" /></div>
+          </div>
+          <div class="caption"><span>BRASA USC</span><span>Visit ↗</span></div>
+        </a>
+        <a class="site" href="https://larissa-oliveira.com" target="_blank" rel="noopener" data-reveal>
+          <div class="browser">
+            <div class="bar"><i></i><i></i><i></i></div>
+            <div class="view"><img src="/work/larissa-full.webp" alt="larissa-oliveira.com" loading="lazy" /></div>
+          </div>
+          <div class="caption"><span>Larissa Oliveira</span><span>Visit ↗</span></div>
+        </a>
+      </div>
+    </section>
+
+    <section class="contact" id="contact">
+      <h2 class="contact-title" data-reveal>Let's make something.</h2>
+      <div class="contact-row" data-reveal>
+        <a class="mail" href="mailto:abujamra@usc.edu" data-email>abujamra@usc.edu</a>
+        <button class="copy" type="button" data-copy>Copy</button>
+      </div>
+      <div class="peek" aria-hidden="true" data-slot="egg-peek"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© 2026 Sunny Side Studios</span>
+    <a href="https://linkedin.com/in/larissa-oliveira2005" target="_blank" rel="noopener">LinkedIn</a>
+  </footer>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
