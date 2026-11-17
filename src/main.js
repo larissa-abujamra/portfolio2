@@ -105,22 +105,83 @@ const io = new IntersectionObserver(es => es.forEach(e => {
 }), { threshold: 0.35 });
 if (!reduce) $$('[data-video]').forEach(v => io.observe(v));
 
-/* sound: one video at a time, tap the frame to toggle */
-const soundIcon = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z" /><path class="wave" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" /><path class="mute" d="M16 9l6 6M22 9l-6 6" /></svg>';
-const soundFrames = $$('[data-sound-toggle]');
-const setSound = (frame, on) => {
-  const v = $('video', frame);
-  v.muted = !on;
-  $('.sound', frame).setAttribute('aria-pressed', String(on));
-  if (on) v.play().catch(() => {});
+/* lightbox: the clicked video grows out of its tile, the page blurs behind it */
+const lb = $('[data-lightbox]');
+const lbVideo = $('.lightbox-video', lb);
+const lbStage = $('.lightbox-stage', lb);
+let openTile = null;
+
+// animate from the tile's box to the video's final box (FLIP)
+const flipFrom = tile => {
+  const from = tile.getBoundingClientRect();
+  const to = lbVideo.getBoundingClientRect();
+  return {
+    x: from.left + from.width / 2 - (to.left + to.width / 2),
+    y: from.top + from.height / 2 - (to.top + to.height / 2),
+    scale: Math.min(from.width / to.width, from.height / to.height),
+  };
 };
-soundFrames.forEach(frame => {
-  $('.sound', frame).innerHTML = soundIcon;
-  frame.addEventListener('click', () => {
-    const turnOn = $('video', frame).muted;
-    soundFrames.forEach(f => setSound(f, false));
-    setSound(frame, turnOn);
-  });
+
+const openLightbox = tile => {
+  const src = $('video', tile);
+  openTile = tile;
+  $('[data-lb-name]', lb).textContent = tile.dataset.name;
+  $('[data-lb-kind]', lb).textContent = tile.dataset.kind;
+  lbVideo.src = src.currentSrc || src.src;
+  lbVideo.poster = src.poster;
+  lbVideo.setAttribute('aria-label', tile.dataset.name);
+  lbVideo.muted = false;
+  lb.hidden = false;
+  document.body.classList.add('lb-open');
+  lenis?.stop();
+  document.documentElement.style.overflow = 'hidden';
+  lbVideo.currentTime = 0;
+  lbVideo.play().catch(() => { lbVideo.muted = true; lbVideo.play().catch(() => {}); });
+  $('.lightbox-close', lb).focus({ preventScroll: true });
+
+  const go = () => {
+    // fill the screen: as big as fits in 92% of the width and 80% of the height
+    const ar = lbVideo.videoWidth / lbVideo.videoHeight || 16 / 9;
+    lbVideo.style.width = `${Math.min(innerWidth * 0.92, 1400, innerHeight * 0.8 * ar)}px`;
+    if (reduce) return;
+    gsap.fromTo('.lightbox-backdrop', { opacity: 0 }, { opacity: 1, duration: 0.45, ease: 'power2.out' });
+    gsap.fromTo('.lightbox-close, .lightbox-caption', { opacity: 0 }, { opacity: 1, duration: 0.4, delay: 0.25 });
+    gsap.fromTo(lbVideo, flipFrom(tile), { x: 0, y: 0, scale: 1, duration: 0.7, ease: 'expo.out' });
+  };
+  // the final size depends on the video's dimensions, so wait until they are known
+  if (lbVideo.readyState >= 1) go(); else lbVideo.addEventListener('loadedmetadata', go, { once: true });
+};
+
+const closeLightbox = () => {
+  if (lb.hidden) return;
+  const tile = openTile;
+  const done = () => {
+    lb.hidden = true;
+    document.body.classList.remove('lb-open');
+    lbVideo.pause();
+    lbVideo.removeAttribute('src'); lbVideo.load();
+    gsap.set([lbVideo, '.lightbox-backdrop', '.lightbox-close', '.lightbox-caption'], { clearProps: 'all' });
+    document.documentElement.style.overflow = '';
+    lenis?.start();
+    tile?.focus({ preventScroll: true });
+  };
+  if (reduce || !tile) return done();
+  document.body.classList.remove('lb-open');
+  gsap.to('.lightbox-close, .lightbox-caption', { opacity: 0, duration: 0.2 });
+  gsap.to('.lightbox-backdrop', { opacity: 0, duration: 0.45, delay: 0.1 });
+  gsap.to(lbVideo, { ...flipFrom(tile), duration: 0.5, ease: 'expo.inOut', onComplete: done });
+};
+
+$$('[data-tile]').forEach(tile => {
+  tile.addEventListener('click', () => openLightbox(tile));
+  tile.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openLightbox(tile); } });
+});
+$$('[data-close]', lb).forEach(el => el.addEventListener('click', closeLightbox));
+lbVideo.addEventListener('click', () => { if (lbVideo.paused) lbVideo.play(); else lbVideo.pause(); });
+addEventListener('keydown', e => {
+  if (lb.hidden) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'Tab') { e.preventDefault(); $('.lightbox-close', lb).focus(); }
 });
 
 /* copy email */

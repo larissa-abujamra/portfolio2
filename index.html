@@ -29,32 +29,28 @@
     <section class="block" id="videos">
       <h2 class="label" data-reveal>Videos</h2>
       <div class="mosaic" data-reveal>
-          <figure class="tile t-feature" data-sound-toggle>
-            <video data-video src="/media/northstar.mp4" poster="/media/northstar-poster.jpg" muted loop playsinline preload="metadata" aria-label="Northstar Robotics launch video"></video>
-            <figcaption><span>Northstar Robotics</span><span>Launch film</span></figcaption>
-            <button class="sound" type="button" aria-pressed="false" aria-label="Sound"></button>
-          </figure>
-        <div class="mosaic-row">
-          <figure class="tile t-tall" data-sound-toggle>
-            <video data-video src="/media/tommys-cart-launch.mp4" poster="/media/tommys-cart-launch-poster.jpg" muted loop playsinline preload="metadata" aria-label="Tommy's Cart launch video"></video>
+        <div class="mosaic-row row-a">
+          <figure class="tile t-tall" tabindex="0" role="button" aria-label="Play Tommy's Cart launch video with sound" data-tile data-name="Tommy's Cart" data-kind="Launch film">
+            <video data-video src="/media/tommys-cart-launch.mp4" poster="/media/tommys-cart-launch-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
             <figcaption><span>Tommy's Cart</span><span>Launch film</span></figcaption>
-            <button class="sound" type="button" aria-pressed="false" aria-label="Sound"></button>
           </figure>
-          <div class="mosaic-stack">
-          <figure class="tile t-wide">
-            <video data-video src="/media/brasa-usc.mp4" poster="/media/brasa-usc-poster.jpg" muted loop playsinline preload="metadata" aria-label="BRASA USC launch video"></video>
+          <figure class="tile t-wide" tabindex="0" role="button" aria-label="Play Northstar Robotics launch video with sound" data-tile data-name="Northstar Robotics" data-kind="Launch film">
+            <video data-video src="/media/northstar.mp4" poster="/media/northstar-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+            <figcaption><span>Northstar Robotics</span><span>Launch film</span></figcaption>
+          </figure>
+          <figure class="tile t-tall" tabindex="0" role="button" aria-label="Play DAPCO promo video with sound" data-tile data-name="DAPCO" data-kind="Promo">
+            <video data-video src="/media/dapco.mp4" poster="/media/dapco-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
+            <figcaption><span>DAPCO</span><span>Promo</span></figcaption>
+          </figure>
+        </div>
+        <div class="mosaic-row row-b">
+          <figure class="tile t-wide" tabindex="0" role="button" aria-label="Play BRASA USC launch video with sound" data-tile data-name="BRASA USC" data-kind="Launch film">
+            <video data-video src="/media/brasa-usc.mp4" poster="/media/brasa-usc-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
             <figcaption><span>BRASA USC</span><span>Launch film</span></figcaption>
           </figure>
-          <figure class="tile t-wide" data-sound-toggle>
-            <video data-video src="/media/brand-gpa.mp4" poster="/media/brand-gpa-poster.jpg" muted loop playsinline preload="metadata" aria-label="The Brand GPA book trailer"></video>
+          <figure class="tile t-wide" tabindex="0" role="button" aria-label="Play The Brand GPA book trailer with sound" data-tile data-name="The Brand GPA" data-kind="Book trailer">
+            <video data-video src="/media/brand-gpa.mp4" poster="/media/brand-gpa-poster.jpg" muted loop playsinline preload="metadata" aria-hidden="true"></video>
             <figcaption><span>The Brand GPA</span><span>Book trailer</span></figcaption>
-            <button class="sound" type="button" aria-pressed="false" aria-label="Sound"></button>
-          </figure>
-          </div>
-          <figure class="tile t-tall" data-sound-toggle>
-            <video data-video src="/media/dapco.mp4" poster="/media/dapco-poster.jpg" muted loop playsinline preload="metadata" aria-label="DAPCO promo video"></video>
-            <figcaption><span>DAPCO</span><span>Promo</span></figcaption>
-            <button class="sound" type="button" aria-pressed="false" aria-label="Sound"></button>
           </figure>
         </div>
       </div>
@@ -101,6 +97,17 @@
     <span>© 2026 Sunny Side Studios</span>
     <a href="https://linkedin.com/in/larissa-oliveira2005" target="_blank" rel="noopener">LinkedIn</a>
   </footer>
+
+  <div class="lightbox" data-lightbox hidden>
+    <div class="lightbox-backdrop" data-close></div>
+    <div class="lightbox-stage" role="dialog" aria-modal="true" aria-label="Video">
+      <video class="lightbox-video" playsinline loop></video>
+      <p class="lightbox-caption"><span data-lb-name></span><span data-lb-kind></span></p>
+    </div>
+    <button class="lightbox-close" type="button" data-close aria-label="Close video">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+    </button>
+  </div>
 
   <script type="module" src="/src/main.js"></script>
 </body>

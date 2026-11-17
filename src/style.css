@@ -57,32 +57,41 @@ a { color: inherit; text-decoration: none; }
 .caption span:last-child { color: var(--muted); }
 
 /* videos: a gapless mosaic.
-   Feature 16:9 on top. Below, two 9:16 tiles flank a stack of two 16:9 tiles.
-   For the stack to match a tall tile's height: wide width = tall width x 128/81. */
+   Row A: tall | wide | tall, all the same height (the wide one is the biggest).
+   Row B: two wides side by side. Widths are aspect ratios, so heights match exactly. */
 .mosaic { --g: clamp(6px, .9vw, 12px); display: grid; gap: var(--g); }
-.mosaic-row { display: grid; grid-template-columns: 81fr 128fr 81fr; gap: var(--g); }
-.mosaic-stack { display: grid; grid-template-rows: 1fr 1fr; gap: var(--g); min-height: 0; }
-.tile { position: relative; margin: 0; overflow: hidden; border-radius: 12px; background: var(--ink); min-height: 0; }
-/* videos sit absolutely so the tiles' aspect ratios, not the files, set the row height */
+.mosaic-row { display: grid; gap: var(--g); }
+.row-a { grid-template-columns: 9fr 28.44fr 9fr; }   /* 9:16, 16:9, 9:16 at one height -> 9 : 28.44 : 9 */
+.row-b { grid-template-columns: 1fr 1fr; }
+.tile { position: relative; margin: 0; overflow: hidden; border-radius: 12px; background: var(--ink); cursor: zoom-in; }
 .tile video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--ease); }
-.tile:hover video { transform: scale(1.02); }
-.t-feature { aspect-ratio: 16 / 9; }
+.tile:hover video { transform: scale(1.03); }
 .t-tall { aspect-ratio: 9 / 16; }
-.tile[data-sound-toggle] { cursor: pointer; }
+.t-wide { aspect-ratio: 16 / 9; }
 .tile figcaption { position: absolute; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; gap: 12px; padding: 40px 14px 12px; font-size: .85rem; color: var(--egg-white); background: linear-gradient(transparent, rgba(30, 18, 10, .55)); opacity: 0; transform: translateY(6px); transition: opacity .35s, transform .35s var(--ease); pointer-events: none; }
 .tile figcaption span:last-child { opacity: .75; }
-.tile:hover figcaption, .tile:focus-within figcaption { opacity: 1; transform: none; }
+.tile:hover figcaption, .tile:focus-visible figcaption { opacity: 1; transform: none; }
 @media (hover: none) { .tile figcaption { opacity: 1; transform: none; } }
-.sound { position: absolute; right: 10px; top: 10px; width: 34px; height: 34px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(250, 238, 221, .9); color: var(--ink); cursor: pointer; }
-.sound svg { width: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.sound svg path:first-child { fill: currentColor; }
-.sound .wave, .sound[aria-pressed="true"] .mute { display: none; }
-.sound[aria-pressed="true"] .wave { display: inline; }
 @media (max-width: 760px) {
-  .mosaic-row { grid-template-columns: 1fr 1fr; }
-  .mosaic-stack { grid-column: 1 / -1; order: 2; grid-template-rows: none; }
-  .mosaic-stack .tile { aspect-ratio: 16 / 9; }
+  .row-a { grid-template-columns: 1fr 1fr; }
+  .row-a .t-wide { grid-column: 1 / -1; order: -1; }
+  .row-b { grid-template-columns: 1fr; }
 }
+
+/* lightbox */
+.lightbox { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: clamp(16px, 4vw, 48px); }
+.lightbox[hidden] { display: none; }
+/* the page itself blurs (backdrop-filter skips playing video layers in some browsers) */
+main, .nav, .footer { transition: filter .5s var(--ease); }
+.lb-open main, .lb-open .nav, .lb-open .footer { filter: blur(16px); }
+.lightbox-backdrop { position: absolute; inset: 0; background: rgba(246, 242, 228, .45); }
+.lightbox-stage { position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; max-width: 100%; }
+.lightbox-video { display: block; max-width: 92vw; height: auto; border-radius: 16px; background: var(--ink); box-shadow: 0 40px 100px -30px rgba(47, 29, 18, .45); cursor: pointer; }
+.lightbox-caption { margin: 0; display: flex; gap: 14px; font-size: .95rem; }
+.lightbox-caption span:last-child { color: var(--muted); }
+.lightbox-close { position: absolute; top: max(16px, env(safe-area-inset-top, 0px)); right: max(16px, env(safe-area-inset-right, 0px)); width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--cream); color: var(--ink); cursor: pointer; transition: transform .3s var(--ease); }
+.lightbox-close:hover { transform: rotate(90deg); }
+.lightbox-close svg { width: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
 
 /* websites */
 .sites { display: grid; grid-template-columns: minmax(0, 1fr); gap: clamp(56px, 8vw, 104px); }
